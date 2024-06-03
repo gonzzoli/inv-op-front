@@ -1,0 +1,13 @@
+.contenedor-pantalla {
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    padding: 1.5rem;
+    background: black;
+    .link-header {
+      color: white;
+    }
+  }
+}
