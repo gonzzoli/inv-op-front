@@ -6,6 +6,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import ModalCrearArticulo from "./ModalCrearArticulo";
 import ModalEditarArticulo from "./ModalEditarArticulo";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
+import { Articulo } from "../../servicios/tipos";
 
 export default function PaginaArticulos() {
   const [nombreBuscado, setNombreBuscado] = useState<string>("");
@@ -19,19 +20,16 @@ export default function PaginaArticulos() {
     stockActual: number;
   }>(null);
 
-  const columnasTabla: PropsTablaDeDatos<{ nombre: string; stockActual: number }>["columnas"] = [
+  const columnasTabla: PropsTablaDeDatos<Articulo>["columnas"] = [
     {
-      visible: true,
       nombreMostrado: "Nombre",
       elementoMostrado: (articulo) => articulo.nombre,
     },
     {
-      visible: true,
       nombreMostrado: "Stock",
       elementoMostrado: (articulo) => articulo.stockActual,
     },
     {
-      visible: true,
       nombreMostrado: "Acciones",
       elementoMostrado: (articulo) => (
         <div className={styles["celda-acciones"]}>
@@ -78,7 +76,7 @@ export default function PaginaArticulos() {
         <div className={styles["contenedor-tabla"]}>
           <TablaDeDatos
             columnas={columnasTabla}
-            filas={[{ nombre: "Articulo 1", stockActual: 10 }]}
+            filas={[{ id: 1, nombre: "Articulo 1", stockActual: 10 }]}
           />
         </div>
       </div>

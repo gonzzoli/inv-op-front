@@ -1,7 +1,6 @@
 import styles from "./styles.module.scss";
 
 type ColumnasTablaDeDatos<T> = {
-  visible: boolean;
   nombreMostrado: string;
   elementoMostrado: (fila: T) => React.ReactNode;
 };
