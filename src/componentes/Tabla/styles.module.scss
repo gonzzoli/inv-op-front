@@ -1,0 +1,33 @@
+.contenedor-smart-list {
+  width: 100%;
+  .tabla {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      tr th {
+        padding: 10px 0;
+        border-bottom: 1px solid grey;
+      }
+    }
+    tbody {
+      width: 100%;
+      tr {
+        width: 100%;
+        td {
+          // Esto es porque si el td no tiene un height especifico
+          // el div hijo Contenedor no va a poder expandirse a ocupar todo el td
+          // con height 100% . Funciona parece pero no se en otros navegadores
+          // ademas de chrome
+          height: 1px;
+        }
+        .celda {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          padding: 3px;
+        }
+      }
+    }
+  }
+}

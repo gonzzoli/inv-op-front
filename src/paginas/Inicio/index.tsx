@@ -38,7 +38,9 @@ export default function PaginaInicio() {
           </Link>
         ))}
       </div>
-      <Outlet />
+      <div className={styles["contenedor-outlet"]}>
+        <Outlet />
+      </div>
     </div>
   );
 }
