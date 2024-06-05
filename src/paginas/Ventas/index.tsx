@@ -33,7 +33,7 @@ export default function PaginaVentas() {
         <div className={styles["buscador-boton"]}>
           <TextField
             onChange={(e) => setNombreBuscado(e.target.value)}
-            label="Buscar por nombre de articulo"
+            label="Buscar por articulo"
             variant="outlined"
             size="small"
           />
