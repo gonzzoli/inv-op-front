@@ -7,7 +7,7 @@ import ModalCrearArticulo from "./ModalCrearArticulo";
 import ModalEditarArticulo from "./ModalEditarArticulo";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
 import { Articulo } from "../../servicios/tiposEntidades";
-import { useArticulos } from "../../servicios/articulos";
+import { useArticulos } from "../../servicios/articulos/articulos";
 
 export default function PaginaArticulos() {
   const queryArticulos = useArticulos();

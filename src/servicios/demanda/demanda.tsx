@@ -1,5 +1,5 @@
-import { DemandaHistorica } from "./tiposEntidades";
-import axiosAPI from "./axiosAPI";
+import { DemandaHistorica } from "../tiposEntidades";
+import axiosAPI from "../axiosAPI";
 import { useQuery } from "@tanstack/react-query";
 
 const buscarDemandaHistorica = async () => {

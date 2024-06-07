@@ -4,7 +4,7 @@ import { Button, IconButton, Modal, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import ModalCrearVenta from "./ModalCrearVenta";
 import { Venta } from "../../servicios/tiposEntidades";
-import { useVentas } from "../../servicios/ventas";
+import { useVentas } from "../../servicios/ventas/ventas";
 
 export default function PaginaVentas() {
   const queryVentas = useVentas();

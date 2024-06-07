@@ -6,19 +6,18 @@ import { useState } from "react";
 import { Articulo } from "../../servicios/tiposEntidades";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { useArticulos } from "../../servicios/articulos";
+import { useArticulos } from "../../servicios/articulos/articulos";
+import { useCrearVenta } from "../../servicios/ventas/ventas";
+import { CrearVentaDTO } from "../../servicios/ventas/dto";
 
-type DatosFormularioCrearVenta = {
-  articuloId: number;
-  cantidad: number;
-  fecha: Date;
-};
 const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
-  const queryArticulos = useArticulos();
+  const mtnCrearVenta = useCrearVenta();
   const [nombreBuscado, setNombreBuscado] = useState<string | undefined>(undefined);
+  const queryArticulos = useArticulos(nombreBuscado ?? "");
 
-  const { control, handleSubmit, setValue, watch, reset, getValues } =
-    useForm<DatosFormularioCrearVenta>({ defaultValues: { fecha: new Date() } });
+  const { control, handleSubmit, setValue, watch, reset } = useForm<CrearVentaDTO>({
+    defaultValues: { fechaHoraAlta: dayjs().format("YYYY-MM-DD") },
+  });
 
   const columnasTabla: PropsTablaDeDatos<Articulo>["columnas"] = [
     {
@@ -46,10 +45,7 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
       <h2>Crear una venta</h2>
       <form
         className={styles["form"]}
-        onSubmit={handleSubmit((dto) => {
-          console.log(dto);
-          onClose();
-        })}
+        onSubmit={handleSubmit((dto) => mtnCrearVenta.mutate(dto, { onSuccess: onClose }))}
       >
         {!watch("articuloId") && (
           <>
@@ -93,7 +89,7 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
 
               <Controller
                 control={control}
-                name="fecha"
+                name="fechaHoraAlta"
                 render={({ field: { onChange, value } }) => (
                   <DatePicker
                     value={dayjs(value)}
@@ -102,7 +98,7 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
                         alert("Debe seleccionar una fecha");
                         return;
                       }
-                      onChange(fecha.toDate());
+                      onChange(fecha.format("YYYY-MM-DD"));
                     }}
                     label="Fecha de venta"
                     closeOnSelect
@@ -115,7 +111,7 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
           </>
         )}
         <Button
-          disabled={!watch("articuloId") || !watch("cantidad") || !watch("fecha")}
+          disabled={!watch("articuloId") || !watch("cantidad") || !watch("fechaHoraAlta")}
           variant="contained"
           type="submit"
           color="success"

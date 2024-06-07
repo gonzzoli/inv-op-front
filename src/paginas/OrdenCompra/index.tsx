@@ -1,5 +1,5 @@
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
-import { useOrdenesCompra } from "../../servicios/ordenesCompra";
+import { useOrdenesCompra } from "../../servicios/ordenesCompra/ordenesCompra";
 import { OrdenCompra } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 
