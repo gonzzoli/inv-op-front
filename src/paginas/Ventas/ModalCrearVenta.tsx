@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import { Button, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { forwardRef, useEffect, useState } from "react";
-import { Articulo } from "../../servicios/tipos";
+import { Articulo } from "../../servicios/tiposEntidades";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 

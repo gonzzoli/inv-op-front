@@ -6,7 +6,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import ModalCrearArticulo from "./ModalCrearArticulo";
 import ModalEditarArticulo from "./ModalEditarArticulo";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
-import { Articulo } from "../../servicios/tipos";
+import { Articulo } from "../../servicios/tiposEntidades";
 
 export default function PaginaArticulos() {
   const [nombreBuscado, setNombreBuscado] = useState<string>("");

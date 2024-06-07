@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Articulo } from "./tipos";
+import { Articulo } from "./tiposEntidades";
 
 export const buscarArticulosPorNombre = async (nombre?: string) => {
   try {
