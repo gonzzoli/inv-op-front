@@ -2,29 +2,25 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Button, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
-import { forwardRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { Articulo } from "../../servicios/tiposEntidades";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
+import { useArticulos } from "../../servicios/articulos";
 
 type DatosFormularioCrearVenta = {
   articuloId: number;
   cantidad: number;
   fecha: Date;
 };
-const ModalCrearVenta = forwardRef<HTMLDivElement, { onClose: () => void }>(({ onClose }, ref) => {
+const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
+  const queryArticulos = useArticulos();
   const [nombreBuscado, setNombreBuscado] = useState<string | undefined>(undefined);
+
   const { control, handleSubmit, setValue, watch, reset, getValues } =
     useForm<DatosFormularioCrearVenta>({ defaultValues: { fecha: new Date() } });
-  const [articulosEncontrados, setArticulosEncontrados] = useState<Articulo[]>([
-    { nombre: "Zapatillas", stockActual: 10, id: 1 },
-  ]);
 
-  const columnasTabla: PropsTablaDeDatos<{
-    id: number;
-    nombre: string;
-    stockActual: number;
-  }>["columnas"] = [
+  const columnasTabla: PropsTablaDeDatos<Articulo>["columnas"] = [
     {
       nombreMostrado: "Nombre",
       elementoMostrado: (articulo) => articulo.nombre,
@@ -43,17 +39,10 @@ const ModalCrearVenta = forwardRef<HTMLDivElement, { onClose: () => void }>(({ o
     },
   ];
 
-  useEffect(() => {
-    // (async () => {
-    //   const articulos = await buscarArticulosPorNombre(nombreBuscado);
-    //   setArticulosEncontrados(articulos);
-    // })();
-  }, [nombreBuscado]);
-
-  useEffect(() => console.log(getValues()));
+  if (!queryArticulos.isSuccess) return <h1>Cargando...</h1>;
 
   return (
-    <div ref={ref} className={styles["modal-crear-venta"]}>
+    <div className={styles["modal-crear-venta"]}>
       <h2>Crear una venta</h2>
       <form
         className={styles["form"]}
@@ -70,7 +59,7 @@ const ModalCrearVenta = forwardRef<HTMLDivElement, { onClose: () => void }>(({ o
               placeholder="Buscar articulo"
             />
             <div className={styles["contenedor-tabla"]}>
-              <TablaDeDatos columnas={columnasTabla} filas={articulosEncontrados} />
+              <TablaDeDatos columnas={columnasTabla} filas={queryArticulos.data!} />
             </div>
           </>
         )}
@@ -88,7 +77,7 @@ const ModalCrearVenta = forwardRef<HTMLDivElement, { onClose: () => void }>(({ o
               Articulo:{" "}
               <strong>
                 {
-                  articulosEncontrados.find((articulo) => articulo.id === watch("articuloId"))
+                  queryArticulos.data!.find((articulo) => articulo.id === watch("articuloId"))
                     ?.nombre
                 }
               </strong>
@@ -136,6 +125,6 @@ const ModalCrearVenta = forwardRef<HTMLDivElement, { onClose: () => void }>(({ o
       </form>
     </div>
   );
-});
+};
 
 export default ModalCrearVenta;

@@ -1,16 +1,14 @@
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
+import { useDemandaHistorica } from "../../servicios/demanda";
+import { DemandaHistorica } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 
 export default function PaginaDemanda() {
-  const columnasTabla: PropsTablaDeDatos<{
-    id: number;
-    fechaDesde: Date;
-    fechaHasta: Date;
-    articulo: string;
-  }>["columnas"] = [
+  const queryDemanda = useDemandaHistorica();
+  const columnasTabla: PropsTablaDeDatos<DemandaHistorica>["columnas"] = [
     {
       nombreMostrado: "Articulo",
-      elementoMostrado: (demanda) => demanda.articulo,
+      elementoMostrado: (demanda) => demanda.articulo.nombre,
     },
     {
       nombreMostrado: "Rango fecha",
@@ -18,15 +16,13 @@ export default function PaginaDemanda() {
         `${demanda.fechaDesde.toLocaleString()} - ${demanda.fechaHasta.toLocaleString()}`,
     },
   ];
+
+  if (!queryDemanda.isSuccess) return <h1>Cargando...</h1>;
+
   return (
     <div>
       <div className={styles["contenedor-tabla"]}>
-        <TablaDeDatos
-          columnas={columnasTabla}
-          filas={[
-            { id: 1, articulo: "Articulo 1", fechaDesde: new Date(), fechaHasta: new Date() },
-          ]}
-        />
+        <TablaDeDatos columnas={columnasTabla} filas={queryDemanda.data!} />
       </div>
     </div>
   );

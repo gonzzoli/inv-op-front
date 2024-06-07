@@ -1,15 +1,16 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { Button, IconButton, Modal, TextField } from "@mui/material";
+import { Button, IconButton, Modal } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { Delete, Edit } from "@mui/icons-material";
 import ModalCrearArticulo from "./ModalCrearArticulo";
 import ModalEditarArticulo from "./ModalEditarArticulo";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
 import { Articulo } from "../../servicios/tiposEntidades";
+import { useArticulos } from "../../servicios/articulos";
 
 export default function PaginaArticulos() {
-  const [nombreBuscado, setNombreBuscado] = useState<string>("");
+  const queryArticulos = useArticulos();
   const [creandoArticulo, setCreandoArticulo] = useState<boolean>(false);
   const [editandoArticulo, setEditandoArticulo] = useState<null | {
     nombre: string;
@@ -44,6 +45,8 @@ export default function PaginaArticulos() {
     },
   ];
 
+  if (!queryArticulos.isSuccess) return <h1>Cargando...</h1>;
+
   return (
     <>
       <Modal open={creandoArticulo} onClose={() => setCreandoArticulo(false)}>
@@ -63,12 +66,6 @@ export default function PaginaArticulos() {
       </Modal>
       <div className={styles["contenedor-pantalla"]}>
         <div className={styles["buscador-boton"]}>
-          <TextField
-            onChange={(e) => setNombreBuscado(e.target.value)}
-            label="Buscar por nombre"
-            variant="outlined"
-            size="small"
-          />
           <Button onClick={() => setCreandoArticulo(true)} variant="contained" color="success">
             Crear articulo
           </Button>
@@ -76,7 +73,7 @@ export default function PaginaArticulos() {
         <div className={styles["contenedor-tabla"]}>
           <TablaDeDatos
             columnas={columnasTabla}
-            filas={[{ id: 1, nombre: "Articulo 1", stockActual: 10 }]}
+            filas={queryArticulos.data!}
           />
         </div>
       </div>

@@ -1,16 +1,15 @@
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
+import { useOrdenesCompra } from "../../servicios/ordenesCompra";
+import { OrdenCompra } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 
 export default function PaginaOrdenesDeCompra() {
-  const columnasTabla: PropsTablaDeDatos<{
-    id: number;
-    cantidad: number;
-    fechaOrden: Date;
-    articulo: string;
-  }>["columnas"] = [
+  const queryOrdenes = useOrdenesCompra();
+
+  const columnasTabla: PropsTablaDeDatos<OrdenCompra>["columnas"] = [
     {
       nombreMostrado: "Articulo",
-      elementoMostrado: (orden) => orden.articulo,
+      elementoMostrado: (orden) => orden.articuloId,
     },
     {
       nombreMostrado: "Cantidad",
@@ -18,16 +17,16 @@ export default function PaginaOrdenesDeCompra() {
     },
     {
       nombreMostrado: "Fecha pedido",
-      elementoMostrado: (orden) => orden.fechaOrden.toLocaleString(),
+      elementoMostrado: (orden) => orden.fechaHoraAlta.toLocaleString(),
     },
   ];
+
+  if (!queryOrdenes.isSuccess) return <h1>Cargando...</h1>;
+
   return (
     <div>
       <div className={styles["contenedor-tabla"]}>
-        <TablaDeDatos
-          columnas={columnasTabla}
-          filas={[{ id: 1, articulo: "Articulo 1", cantidad: 10, fechaOrden: new Date() }]}
-        />
+        <TablaDeDatos columnas={columnasTabla} filas={queryOrdenes.data!} />
       </div>
     </div>
   );

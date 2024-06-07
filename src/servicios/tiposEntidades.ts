@@ -47,7 +47,7 @@ export type OrdenCompra = {
 
 export type DemandaHistorica = {
   id: number;
-  articuloId: number;
+  articulo: Articulo;
   cantidadTotal: number;
   fechaDesde: Date;
   fechaHasta: Date;
