@@ -12,11 +12,11 @@ import { useDebounceValue } from "usehooks-ts";
 
 const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
   const mtnCrearVenta = useCrearVenta();
-  const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 300);
+  const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 200);
   const queryArticulos = useArticulos(nombreBuscado);
 
   const { control, handleSubmit, setValue, watch, reset } = useForm<CrearVentaDTO>({
-    defaultValues: { fechaHoraAlta: dayjs().format("YYYY-MM-DD") },
+    defaultValues: { fechaHoraAlta: dayjs().format("YYYY-MM-DD"), cantidad: 1 },
   });
 
   const columnasTabla: PropsTablaDeDatos<Articulo>["columnas"] = [

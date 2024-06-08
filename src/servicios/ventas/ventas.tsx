@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
 import { Venta } from "../tiposEntidades";
 import { CrearVentaDTO } from "./dto";
+import toast from "react-hot-toast";
 
 const buscarVentas = async () => {
   const { data } = await axiosAPI.get<Venta[]>(`/ventas`);
@@ -25,6 +26,7 @@ export const useCrearVenta = () => {
   return useMutation({
     mutationFn: (dto: CrearVentaDTO) => crearVenta(dto),
     onSuccess: () => {
+      toast.success("Venta creada correctamente")
       queryClient.invalidateQueries({ queryKey: ["ventas"] });
     },
   });
