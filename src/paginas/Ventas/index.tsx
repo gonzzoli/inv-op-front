@@ -13,7 +13,7 @@ export default function PaginaVentas() {
   const columnasTabla: PropsTablaDeDatos<Venta>["columnas"] = [
     {
       nombreMostrado: "Nombre",
-      elementoMostrado: (venta) => venta.nombreArticulo,
+      elementoMostrado: (venta) => venta.articulo.nombre,
     },
     {
       nombreMostrado: "Cantidad",
@@ -21,7 +21,7 @@ export default function PaginaVentas() {
     },
     {
       nombreMostrado: "Fecha",
-      elementoMostrado: (venta) => venta.fecha.toDateString(),
+      elementoMostrado: (venta) => venta.fechaHoraAlta,
     },
   ];
 

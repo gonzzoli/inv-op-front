@@ -16,7 +16,7 @@ export const useVentas = () => {
 };
 
 const crearVenta = async (dto: CrearVentaDTO) => {
-  const { data } = await axiosAPI.post<Venta>(`/ventas`, dto);
+  const { data } = await axiosAPI.post<Venta>(`/ventas/createVenta`, dto);
   return data;
 };
 

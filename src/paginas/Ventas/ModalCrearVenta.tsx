@@ -2,18 +2,18 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Button, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
-import { useState } from "react";
 import { Articulo } from "../../servicios/tiposEntidades";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { useArticulos } from "../../servicios/articulos/articulos";
 import { useCrearVenta } from "../../servicios/ventas/ventas";
 import { CrearVentaDTO } from "../../servicios/ventas/dto";
+import { useDebounceValue } from "usehooks-ts";
 
 const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
   const mtnCrearVenta = useCrearVenta();
-  const [nombreBuscado, setNombreBuscado] = useState<string | undefined>(undefined);
-  const queryArticulos = useArticulos(nombreBuscado ?? "");
+  const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 300);
+  const queryArticulos = useArticulos(nombreBuscado);
 
   const { control, handleSubmit, setValue, watch, reset } = useForm<CrearVentaDTO>({
     defaultValues: { fechaHoraAlta: dayjs().format("YYYY-MM-DD") },
@@ -38,8 +38,6 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
     },
   ];
 
-  if (!queryArticulos.isSuccess) return <h1>Cargando...</h1>;
-
   return (
     <div className={styles["modal-crear-venta"]}>
       <h2>Crear una venta</h2>
@@ -55,7 +53,11 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
               placeholder="Buscar articulo"
             />
             <div className={styles["contenedor-tabla"]}>
-              <TablaDeDatos columnas={columnasTabla} filas={queryArticulos.data!} />
+              {queryArticulos.isLoading && <h2>Cargando...</h2>}
+              {queryArticulos.isError && <h2>Ocurrio un error buscando articulos</h2>}
+              {queryArticulos.isSuccess && (
+                <TablaDeDatos columnas={columnasTabla} filas={queryArticulos.data!} />
+              )}
             </div>
           </>
         )}

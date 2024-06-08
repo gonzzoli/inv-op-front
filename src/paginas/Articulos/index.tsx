@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { Button, IconButton, Modal } from "@mui/material";
+import { Button, IconButton, Modal, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { Delete, Edit } from "@mui/icons-material";
 import ModalCrearArticulo from "./ModalCrearArticulo";
@@ -8,9 +8,11 @@ import ModalEditarArticulo from "./ModalEditarArticulo";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
 import { Articulo } from "../../servicios/tiposEntidades";
 import { useArticulos } from "../../servicios/articulos/articulos";
+import { useDebounceValue } from "usehooks-ts";
 
 export default function PaginaArticulos() {
-  const queryArticulos = useArticulos();
+  const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 300);
+  const queryArticulos = useArticulos(nombreBuscado);
   const [creandoArticulo, setCreandoArticulo] = useState<boolean>(false);
   const [editandoArticulo, setEditandoArticulo] = useState<null | {
     nombre: string;
@@ -45,8 +47,6 @@ export default function PaginaArticulos() {
     },
   ];
 
-  if (!queryArticulos.isSuccess) return <h1>Cargando...</h1>;
-
   return (
     <>
       <Modal open={creandoArticulo} onClose={() => setCreandoArticulo(false)}>
@@ -66,15 +66,21 @@ export default function PaginaArticulos() {
       </Modal>
       <div className={styles["contenedor-pantalla"]}>
         <div className={styles["buscador-boton"]}>
+          <TextField
+            label="Buscar por nombre"
+            placeholder="Nombre del articulo..."
+            onChange={(e) => setNombreBuscado(e.target.value)}
+          />
           <Button onClick={() => setCreandoArticulo(true)} variant="contained" color="success">
             Crear articulo
           </Button>
         </div>
         <div className={styles["contenedor-tabla"]}>
-          <TablaDeDatos
-            columnas={columnasTabla}
-            filas={queryArticulos.data!}
-          />
+          {queryArticulos.isLoading && <h1>Cargando...</h1>}
+          {queryArticulos.isError && <h1>Ocurrio un error buscando los articulos</h1>}
+          {queryArticulos.isSuccess && (
+            <TablaDeDatos columnas={columnasTabla} filas={queryArticulos.data!} />
+          )}
         </div>
       </div>
     </>

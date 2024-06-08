@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
 
 const buscarArticulos = async (nombre: string) => {
-  const { data } = await axiosAPI.get<Articulo[]>(`/articulos?nombre=${nombre}`);
+  const { data } = await axiosAPI.get<Articulo[]>(`/articulo/buscar?nombre=${nombre}`);
   return data;
 };
 

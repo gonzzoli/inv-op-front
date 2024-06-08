@@ -12,9 +12,8 @@ export type EstadoArticulo = {
 
 export type Venta = {
   id: number;
-  articuloId: number;
-  nombreArticulo: string;
-  fecha: Date;
+  articulo: Articulo;
+  fechaHoraAlta: string;
   cantidad: number;
 };
 
