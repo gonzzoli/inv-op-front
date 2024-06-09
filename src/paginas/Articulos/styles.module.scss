@@ -9,9 +9,9 @@
   }
 }
 
-.modal-crear-articulo,
-.modal-eliminar-articulo,
-.modal-editar-articulo {
+.modal-crear,
+.modal-eliminar,
+.modal-editar {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -29,7 +29,7 @@
   }
 }
 
-.modal-eliminar-articulo {
+.modal-eliminar {
   h4 {
     margin-bottom: 1rem;
   }
@@ -43,7 +43,7 @@
   }
 }
 
-.modal-editar-articulo {
+.modal-editar {
   h4 {
     margin-bottom: 1rem;
   }

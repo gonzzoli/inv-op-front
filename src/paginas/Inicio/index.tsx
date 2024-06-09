@@ -18,6 +18,10 @@ const linksHeader = [
     texto: "Ordenes",
     url: "/ordenes",
   },
+  {
+    texto: "Proveedores",
+    url: "/proveedores",
+  },
 ];
 
 export default function PaginaInicio() {

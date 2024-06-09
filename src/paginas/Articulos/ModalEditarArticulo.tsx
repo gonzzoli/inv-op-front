@@ -25,7 +25,7 @@ export default function ModalEditarArticulo({
   });
 
   return (
-    <div className={styles["modal-editar-articulo"]}>
+    <div className={styles["modal-editar"]}>
       <h2>Editar un articulo</h2>
       <h4>{articulo.nombre}</h4>
       <form

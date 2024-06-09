@@ -9,7 +9,7 @@ export default function ModalEliminarArticulo({
   articulo: { nombre: string; stockActual: number };
 }) {
   return (
-    <div className={styles["modal-eliminar-articulo"]}>
+    <div className={styles["modal-eliminar"]}>
       <h2>Eliminar un articulo</h2>
       <h4>{articulo.nombre}</h4>
 

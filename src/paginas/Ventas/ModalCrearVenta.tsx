@@ -5,8 +5,8 @@ import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { Articulo } from "../../servicios/tiposEntidades";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { useArticulos } from "../../servicios/articulos/articulos";
-import { useCrearVenta } from "../../servicios/ventas/ventas";
+import { useArticulos } from "../../servicios/articulos";
+import { useCrearVenta } from "../../servicios/ventas";
 import { CrearVentaDTO } from "../../servicios/ventas/dto";
 import { useDebounceValue } from "usehooks-ts";
 
@@ -31,7 +31,11 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
     {
       nombreMostrado: "",
       elementoMostrado: (articulo) => (
-        <Button size="small" onClick={() => setValue("articuloId", articulo.id)}>
+        <Button
+          disabled={articulo.stockActual === 0}
+          size="small"
+          onClick={() => setValue("articuloId", articulo.id)}
+        >
           Seleccionar
         </Button>
       ),
@@ -39,7 +43,7 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
   ];
 
   return (
-    <div className={styles["modal-crear-venta"]}>
+    <div className={styles["modal-crear"]}>
       <h2>Crear una venta</h2>
       <form
         className={styles["form"]}
@@ -113,7 +117,13 @@ const ModalCrearVenta = ({ onClose }: { onClose: () => void }) => {
           </>
         )}
         <Button
-          disabled={!watch("articuloId") || !watch("cantidad") || !watch("fechaHoraAlta")}
+          disabled={
+            !watch("articuloId") ||
+            !watch("cantidad") ||
+            !watch("fechaHoraAlta") ||
+            queryArticulos.data!.find((articulo) => articulo.id === watch("articuloId"))!
+              .stockActual < watch("cantidad")
+          }
           variant="contained"
           type="submit"
           color="success"

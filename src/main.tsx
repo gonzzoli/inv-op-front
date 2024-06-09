@@ -11,6 +11,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import PaginaProveedores from "./paginas/Proveedores/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/ventas",
         element: <PaginaVentas />,
+      },
+      {
+        path: "/proveedores",
+        element: <PaginaProveedores />,
       },
     ],
   },

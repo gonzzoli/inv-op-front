@@ -16,7 +16,7 @@ type DatosFormularioCrearArticulo = {
 export default function ModalCrearArticulo({ onClose }: { onClose: () => void }) {
   const { control, reset, handleSubmit } = useForm<DatosFormularioCrearArticulo>();
   return (
-    <div className={styles["modal-crear-articulo"]}>
+    <div className={styles["modal-crear"]}>
       <h2>Crear un articulo</h2>
       <form
         className={styles["form"]}

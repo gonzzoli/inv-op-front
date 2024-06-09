@@ -1,5 +1,5 @@
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
-import { useDemandaHistorica } from "../../servicios/demanda/demanda";
+import { useDemandaHistorica } from "../../servicios/demanda";
 import { DemandaHistorica } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 
