@@ -1,17 +1,28 @@
-import { Articulo } from "../tiposEntidades";
+import { Articulo, ModeloInventario } from "../tiposEntidades";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
-
-const buscarArticulos = async (nombre: string) => {
-  const { data } = await axiosAPI.get<Articulo[]>(`/articulo/buscar?filtro=${nombre}`);
-  return data;
-};
 
 export const useArticulos = (nombre: string) => {
   return useQuery({
     queryKey: ["articulos", nombre],
-    queryFn: () => buscarArticulos(nombre),
+    queryFn: () =>
+      (async () => {
+        const { data } = await axiosAPI.get<Articulo[]>(`/articulo/buscar?filtro=${nombre}`);
+        return data;
+      })(),
     enabled: !!nombre,
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+  });
+};
+
+export const useModelosInventario = () => {
+  return useQuery({
+    queryKey: ["modelos-inventario"],
+    queryFn: () =>
+      (async () => {
+        const { data } = await axiosAPI.get<ModeloInventario[]>(`/articulo/buscar`);
+        return data;
+      })(),
+    refetchInterval: false,
   });
 };

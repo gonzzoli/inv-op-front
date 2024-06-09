@@ -10,6 +10,11 @@ export type EstadoArticulo = {
   fechaHoraAltaEstado: Date;
 };
 
+export type ModeloInventario = {
+  id: number;
+  nombre: string;
+};
+
 export type Venta = {
   id: number;
   articulo: Articulo;
@@ -59,4 +64,10 @@ export type DemandaHistorica = {
   fechaDesde: Date;
   fechaHasta: Date;
   tipoPeriodo: string;
+};
+
+export type TipoPeriodoDemanda = {
+  id: number;
+  nombre: string;
+  cantidadDias: number;
 };

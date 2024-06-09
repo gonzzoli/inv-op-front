@@ -79,7 +79,7 @@ export default function PaginaArticulos() {
           {queryArticulos.isLoading && <h1>Cargando...</h1>}
           {queryArticulos.isError && <h1>Ocurrio un error buscando los articulos</h1>}
           {queryArticulos.isSuccess && (
-            <TablaDeDatos columnas={columnasTabla} filas={queryArticulos.data!} />
+            <TablaDeDatos columnas={columnasTabla} filas={queryArticulos.data} />
           )}
         </div>
       </div>
