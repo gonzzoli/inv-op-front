@@ -23,6 +23,14 @@ export type Proveedor = {
   nombre: string;
 };
 
+export type ProveedorArticulo = {
+  id: number;
+  articulo: Articulo;
+  proveedor: Proveedor;
+  demoraPromedio: number;
+  estadoActual: number;
+};
+
 export type EstadoOrdenCompra = {
   id: number;
   fechaHoraBaja: Date;

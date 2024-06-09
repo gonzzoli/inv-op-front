@@ -1,7 +1,12 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
-import { Button, TextField } from "@mui/material";
-import { Proveedor } from "../../servicios/tiposEntidades";
+import { Button, Modal, TextField } from "@mui/material";
+import { Articulo, Proveedor, ProveedorArticulo } from "../../servicios/tiposEntidades";
+import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
+import { useState } from "react";
+import ModalEliminarArticulo from "./ModalEliminarArticulo";
+import ModalAgregarArticulo from "./ModalAgregarArticulo";
+import { useArticulosProveedor } from "../../servicios/proveedores";
 
 type DatosFormularioEditarProveedor = Proveedor;
 
@@ -16,26 +21,71 @@ export default function ModalEditarProveedor({
     defaultValues: proveedor,
   });
 
-  return (
-    <div className={styles["modal-editar"]}>
-      <h2>Editar un Proveedor</h2>
-      <h4>{proveedor.nombre}</h4>
-      <form
-        className={styles["form"]}
-        onSubmit={handleSubmit((dto) => {
-          alert("Editado " + dto.nombre);
-          onClose();
-        })}
-      >
-        <Controller
-          control={control}
-          name="nombre"
-          render={({ field }) => <TextField {...field} label="Nombre" size="small" />}
-        />
-        <Button variant="contained" type="submit" color="primary">
-          Editar
+  const [agregandoArticulo, setAgregandoArticulo] = useState(false);
+  const [eliminandoArticulo, setEliminandoArticulo] = useState<ProveedorArticulo | null>(null);
+  const queryArticulosProveedor = useArticulosProveedor(proveedor.id);
+
+  const columnasTabla: PropsTablaDeDatos<ProveedorArticulo>["columnas"] = [
+    {
+      nombreMostrado: "Nombre",
+      elementoMostrado: (proveedorArticulo) => proveedorArticulo.articulo.nombre,
+    },
+    {
+      nombreMostrado: "Demora",
+      elementoMostrado: (proveedorArticulo) => proveedorArticulo.demoraPromedio,
+    },
+    {
+      nombreMostrado: "Acciones",
+      elementoMostrado: (proveedorArticulo) => (
+        <Button onClick={() => setEliminandoArticulo(proveedorArticulo)} size="small">
+          Eliminar
         </Button>
-      </form>
-    </div>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <Modal open={!eliminandoArticulo}>
+        <ModalEliminarArticulo
+          proveedorArticulo={eliminandoArticulo!}
+          onClose={() => setEliminandoArticulo(null)}
+        />
+      </Modal>
+      <Modal open={agregandoArticulo}>
+        <ModalAgregarArticulo onClose={() => setAgregandoArticulo(false)} />
+      </Modal>
+      <div className={styles["modal-editar"]}>
+        <h2>Editar un Proveedor</h2>
+        <form
+          className={styles["form"]}
+          onSubmit={handleSubmit((dto) => {
+            alert("Editado " + dto.nombre);
+            onClose();
+          })}
+        >
+          <h4>{proveedor.nombre}</h4>
+          <Controller
+            control={control}
+            name="nombre"
+            render={({ field }) => <TextField {...field} label="Nombre" size="small" />}
+          />
+          <Button variant="contained" type="submit" color="primary">
+            Confirmar nombre
+          </Button>
+        </form>
+
+        <h2>Articulos asociados</h2>
+        <TablaDeDatos columnas={columnasTabla} filas={queryArticulosProveedor.data!} />
+        <Button
+          onClick={() => setAgregandoArticulo(true)}
+          variant="contained"
+          color="success"
+          size="small"
+        >
+          Agregar artículo
+        </Button>
+      </div>
+    </>
   );
 }

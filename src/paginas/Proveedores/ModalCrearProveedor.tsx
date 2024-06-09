@@ -3,6 +3,8 @@ import styles from "./styles.module.scss";
 import { Button, TextField } from "@mui/material";
 import { CrearProveedorDTO } from "../../servicios/proveedores/dto";
 import { useCrearProveedor } from "../../servicios/proveedores";
+import { useDebounceValue } from "usehooks-ts";
+import { useArticulos } from "../../servicios/articulos";
 
 const ModalCrearProveedor = ({ onClose }: { onClose: () => void }) => {
   const mtnCrearProveedor = useCrearProveedor();
