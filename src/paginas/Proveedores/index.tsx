@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { Button, IconButton, Modal } from "@mui/material";
+import { Button, IconButton, Modal, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { useProveedores } from "../../servicios/proveedores";
 import ModalCrearProveedor from "./ModalCrearProveedor";
@@ -32,8 +32,6 @@ export default function PaginaProveedores() {
     },
   ];
 
-  if (!queryProveedores.isSuccess) return <h1>Cargando...</h1>;
-
   return (
     <>
       <Modal open={creandoProveedor} onClose={() => setCreandoProveedor(false)}>
@@ -47,12 +45,16 @@ export default function PaginaProveedores() {
       </Modal>
       <div className={styles["contenedor-pantalla"]}>
         <div className={styles["buscador-boton"]}>
+          <TextField size="small" onChange={(e) => setNombreBuscado(e.target.value)} />
           <Button onClick={() => setCreandoProveedor(true)} variant="contained" color="success">
             Crear proveedor
           </Button>
         </div>
         <div className={styles["contenedor-tabla"]}>
-          <TablaDeDatos columnas={columnasTabla} filas={queryProveedores.data!} />
+          {!queryProveedores.isSuccess && <h1>Cargando...</h1>}
+          {queryProveedores.isSuccess && (
+            <TablaDeDatos columnas={columnasTabla} filas={queryProveedores.data!} />
+          )}
         </div>
       </div>
     </>

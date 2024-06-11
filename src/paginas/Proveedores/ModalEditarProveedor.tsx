@@ -1,11 +1,10 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Button, Modal, TextField } from "@mui/material";
-import { Articulo, Proveedor, ProveedorArticulo } from "../../servicios/tiposEntidades";
+import { Proveedor, ProveedorArticulo } from "../../servicios/tiposEntidades";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { useState } from "react";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
-import ModalAgregarArticulo from "./ModalAgregarArticulo";
 import { useArticulosProveedor } from "../../servicios/proveedores";
 
 type DatosFormularioEditarProveedor = Proveedor;
@@ -51,9 +50,6 @@ export default function ModalEditarProveedor({
           proveedorArticulo={eliminandoArticulo!}
           onClose={() => setEliminandoArticulo(null)}
         />
-      </Modal>
-      <Modal open={agregandoArticulo}>
-        <ModalAgregarArticulo onClose={() => setAgregandoArticulo(false)} />
       </Modal>
       <div className={styles["modal-editar"]}>
         <h2>Editar un Proveedor</h2>

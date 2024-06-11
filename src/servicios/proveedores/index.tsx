@@ -15,8 +15,9 @@ export const useProveedores = (nombreBuscado: string) => {
     queryFn: () =>
       (async (nombreBuscado: string) => {
         const { data } = await axiosAPI.get<Proveedor[]>(
-          `/proveedores?filtroNombre=${nombreBuscado}`
+          `/proveedores/buscarPorDenominacion?filtroNombre=${nombreBuscado}`
         );
+        console.log("CACA", data)
         return data;
       })(nombreBuscado),
     enabled: !!nombreBuscado,
@@ -29,7 +30,7 @@ export const useCrearProveedor = () => {
   return useMutation({
     mutationFn: (dto: CrearProveedorDTO) =>
       (async (dto: CrearProveedorDTO) => {
-        const { data } = await axiosAPI.post<Proveedor>(`/proveedores`, dto);
+        const { data } = await axiosAPI.post<Proveedor>(`/proveedores/crear`, dto);
         return data;
       })(dto),
     onSuccess: () => {

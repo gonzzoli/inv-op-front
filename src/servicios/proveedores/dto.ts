@@ -1,7 +1,7 @@
 export type CrearProveedorDTO = {
   nombre: string;
   articulos: {
-    id: number;
+    idArticulo: number;
     demoraPromedio: number;
   }[];
 };
