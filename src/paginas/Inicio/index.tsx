@@ -1,5 +1,6 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles.module.scss";
+import { useEffect } from "react";
 
 const linksHeader = [
   {
@@ -26,6 +27,10 @@ const linksHeader = [
 
 export default function PaginaInicio() {
   const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (location.pathname === "/") navigate("/articulos");
+  }, [location]);
   return (
     <div className={styles["contenedor-pantalla"]}>
       <div className={styles["header"]}>

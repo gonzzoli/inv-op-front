@@ -10,7 +10,6 @@ export const useArticulos = (nombre: string) => {
         const { data } = await axiosAPI.get<Articulo[]>(`/articulo/buscar?filtro=${nombre}`);
         return data;
       })(),
-    enabled: !!nombre,
     placeholderData: keepPreviousData,
   });
 };
@@ -20,7 +19,8 @@ export const useModelosInventario = () => {
     queryKey: ["modelos-inventario"],
     queryFn: () =>
       (async () => {
-        const { data } = await axiosAPI.get<ModeloInventario[]>(`/articulo/buscar`);
+        const { data } = await axiosAPI.get<string[]>(`/articulo/getTiposInventario`);
+        console.log("DADA", data)
         return data;
       })(),
     refetchInterval: false,

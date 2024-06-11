@@ -17,10 +17,8 @@ export const useProveedores = (nombreBuscado: string) => {
         const { data } = await axiosAPI.get<Proveedor[]>(
           `/proveedores/buscarPorDenominacion?filtroNombre=${nombreBuscado}`
         );
-        console.log("CACA", data)
         return data;
       })(nombreBuscado),
-    enabled: !!nombreBuscado,
     placeholderData: keepPreviousData,
   });
 };
