@@ -1,53 +1,95 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
-import { Button, TextField } from "@mui/material";
-
-type DatosFormularioEditarArticulo = {
-  costoAlmacenamiento: number;
-  costoOrden: number;
-  loteOptimo: number;
-  nombre: string;
-  puntoPedido: number;
-  stockActual: number;
-  stockSeguridad: number;
-  tiempoEntrePedidos: number;
-};
+import { Button, MenuItem, TextField } from "@mui/material";
+import { Articulo } from "@src/servicios/tiposEntidades";
+import { useEditarArticulo, useModelosInventario } from "@src/servicios/articulos";
 
 export default function ModalEditarArticulo({
   onClose,
   articulo,
 }: {
   onClose: () => void;
-  articulo: { nombre: string; stockActual: number };
+  articulo: Articulo;
 }) {
-  const { control, reset, handleSubmit } = useForm<DatosFormularioEditarArticulo>({
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Articulo>({
     defaultValues: articulo,
   });
+  const mtnEditarArticulo = useEditarArticulo();
+  const queryModelosInventario = useModelosInventario();
 
   return (
     <div className={styles["modal-editar"]}>
       <h2>Editar un articulo</h2>
-      <h4>{articulo.nombre}</h4>
       <form
         className={styles["form"]}
         onSubmit={handleSubmit((dto) => {
-          alert("Editado");
+          mtnEditarArticulo.mutate(dto);
           onClose();
         })}
       >
         <Controller
           control={control}
           name="nombre"
-          render={({ field }) => <TextField {...field} label="Nombre" size="small" />}
+          rules={{ required: true }}
+          render={({ field }) => <TextField error={!!errors.nombre} {...field} label="Nombre" />}
         />
         <Controller
           control={control}
           name="stockActual"
-          render={({ field }) => (
-            <TextField {...field} label="Stock actual" type="number" size="small" />
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              onChange={(e) => (Number(e.currentTarget.value) < 0 ? null : onChange(e))}
+              error={!!errors.stockActual}
+              label="Stock actual"
+              value={value}
+              type="number"
+            />
           )}
         />
-        <Button variant="contained" type="submit" color="primary">
+        <Controller
+          control={control}
+          name="costoAlmacenamiento"
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              onChange={(e) => (Number(e.currentTarget.value) < 0 ? null : onChange(e))}
+              error={!!errors.costoAlmacenamiento}
+              label="Costo de almacenamiento"
+              value={value}
+              type="number"
+            />
+          )}
+        />
+        {queryModelosInventario.isSuccess && (
+          <Controller
+            control={control}
+            name="modeloInventario"
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <>
+                <TextField
+                  onChange={onChange}
+                  label="Modelo de inventario"
+                  value={value}
+                  select
+                  error={!!errors.modeloInventario}
+                >
+                  {/* no va a funcionar porque solo tengo el string y no el id. bah depende como lo manejan en el back */}
+                  {queryModelosInventario.data.map((modelo, index) => (
+                    <MenuItem key={index} value={modelo}>
+                      {modelo}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </>
+            )}
+          />
+        )}
+        <Button variant="contained" type="submit" color="info">
           Editar
         </Button>
       </form>

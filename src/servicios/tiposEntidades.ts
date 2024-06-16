@@ -2,13 +2,14 @@ export type Articulo = {
   id: number;
   nombre: string;
   stockActual: number;
+  estadoArticulo: string;
+  modeloInventario: string;
+  costoAlmacenamiento: number;
+  loteOptimo: number;
+  tiempoEntrePedidos: number;
 };
 
-export type EstadoArticulo = {
-  id: number;
-  nombreEstado: string;
-  fechaHoraAltaEstado: Date;
-};
+export type EstadoArticulo = "A_REPONER" | "DISPONIBLE" | "NO_DISPONIBLE";
 
 export type ModeloInventario = {
   id: number;

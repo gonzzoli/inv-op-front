@@ -1,12 +1,14 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
-import { Button, MenuItem, Select, TextField } from "@mui/material";
-import { useModelosInventario } from "@src/servicios/articulos";
+import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { useCrearArticulo, useModelosInventario } from "@src/servicios/articulos";
 
 type DatosFormularioCrearArticulo = {
   nombre: string;
   stockActual: number;
   modeloInventario: string;
+  estadoArticulo: "DISPONIBLE";
+  costoAlmacenamiento: number;
 };
 
 export default function ModalCrearArticulo({ onClose }: { onClose: () => void }) {
@@ -15,8 +17,9 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<DatosFormularioCrearArticulo>();
+  } = useForm<DatosFormularioCrearArticulo>({ defaultValues: { estadoArticulo: "DISPONIBLE" } });
   const queryModelosInventario = useModelosInventario();
+  const mtnCrearArticulo = useCrearArticulo();
 
   return (
     <div className={styles["modal-crear"]}>
@@ -24,7 +27,7 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
       <form
         className={styles["form"]}
         onSubmit={handleSubmit((dto) => {
-          console.log(dto);
+          mtnCrearArticulo.mutate(dto)
           onClose();
         })}
       >
@@ -37,8 +40,27 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
         <Controller
           control={control}
           name="stockActual"
-          render={({ field }) => (
-            <TextField error={!!errors.stockActual} {...field} label="Stock actual" type="number" />
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              onChange={(e) => (Number(e.currentTarget.value) < 0 ? null : onChange(e))}
+              error={!!errors.stockActual}
+              label="Stock actual"
+              value={value}
+              type="number"
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="costoAlmacenamiento"
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              onChange={(e) => (Number(e.currentTarget.value) < 0 ? null : onChange(e))}
+              error={!!errors.costoAlmacenamiento}
+              label="Costo de almacenamiento"
+              value={value}
+              type="number"
+            />
           )}
         />
         {queryModelosInventario.isSuccess && (
@@ -47,19 +69,22 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
             name="modeloInventario"
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
-              <Select
-                onChange={onChange}
-                label="Modelo de inventario"
-                value={value}
-                error={!!errors.modeloInventario}
-              >
-                {/* no va a funcionar porque solo tengo el string y no el id. bah depende como lo manejan en el back */}
-                {queryModelosInventario.data.map((modelo, index) => (
-                  <MenuItem key={index} value={modelo}>
-                    {modelo}
-                  </MenuItem>
-                ))}
-              </Select>
+              <>
+                <TextField
+                  onChange={onChange}
+                  label="Modelo de inventario"
+                  value={value}
+                  select
+                  error={!!errors.modeloInventario}
+                >
+                  {/* no va a funcionar porque solo tengo el string y no el id. bah depende como lo manejan en el back */}
+                  {queryModelosInventario.data.map((modelo, index) => (
+                    <MenuItem key={index} value={modelo}>
+                      {modelo}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </>
             )}
           />
         )}
