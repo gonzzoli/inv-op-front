@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
 import { OrdenCompra } from "../tiposEntidades";
+import { CrearOrdenCompraDTO } from "./dto";
 
 export const useOrdenesCompra = () => {
   return useQuery({
@@ -10,6 +11,20 @@ export const useOrdenesCompra = () => {
         const { data } = await axiosAPI.get<OrdenCompra[]>(`/OrdenCompra/getall`);
         return data;
       })(),
+  });
+};
+
+export const useCrearOrdenCompra = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (dto: CrearOrdenCompraDTO) =>
+      (async () => {
+        const { data } = await axiosAPI.post<OrdenCompra>(`/OrdenCompra/create`, dto);
+        return data;
+      })(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ordenes"] });
+    },
   });
 };
 

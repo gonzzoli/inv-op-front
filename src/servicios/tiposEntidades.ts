@@ -37,11 +37,7 @@ export type ProveedorArticulo = {
   estadoActual: number;
 };
 
-export type EstadoOrdenCompra = {
-  id: number;
-  fechaHoraBaja: Date;
-  nombreEstado: string;
-};
+export type EstadoOrdenCompra = "PENDIENTE";
 
 export type EstadoProveedor = {
   id: number;
@@ -50,10 +46,11 @@ export type EstadoProveedor = {
 
 export type OrdenCompra = {
   id: number;
-  articuloId: number;
   cantidad: number;
+  demoraEstimada: number;
   fechaHoraAlta: Date;
   nroOrdenCompra: number;
+  articulo: Articulo;
   proveedor: Proveedor;
   estadoOrdenCompra: EstadoOrdenCompra;
 };

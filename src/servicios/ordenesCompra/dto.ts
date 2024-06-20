@@ -1,4 +1,6 @@
 export type CrearOrdenCompraDTO = {
-  nombre: string;
-  
+  proveedorId: number;
+  articuloId: number;
+  demoraEstimada: number;
+  cantidad: number;
 };

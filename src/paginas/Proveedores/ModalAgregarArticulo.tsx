@@ -8,6 +8,7 @@ import TablaDeDatos, { PropsTablaDeDatos } from "@src/componentes/Tabla";
 import { Articulo, Proveedor } from "@src/servicios/tiposEntidades";
 import { Add } from "@mui/icons-material";
 import { CrearProveedorArticuloDTO } from "@src/servicios/proveedores/dto";
+import toast from "react-hot-toast";
 
 export default function ModalCrearProveedorArticulo({
   onClose,
@@ -52,7 +53,12 @@ export default function ModalCrearProveedorArticulo({
         <form
           className={styles["form"]}
           onSubmit={handleSubmit((dto) =>
-            mtnCrearProveedorArticulo.mutate(dto, { onSuccess: onClose })
+            mtnCrearProveedorArticulo.mutate(dto, {
+              onSuccess: () => {
+                toast.success("Articulo agregado al proveedor");
+                onClose();
+              },
+            })
           )}
         >
           {!watch("articuloId") ? (
