@@ -15,6 +15,9 @@ export type CrearProveedorArticuloDTO = {
   proveedorId: number;
   articuloId: number;
   demora: number;
+  costoPedido: number;
+  demanda: number;
+  precioPorUnidad: number;
 };
 
 export type EditarProveedorArticuloDTO = {

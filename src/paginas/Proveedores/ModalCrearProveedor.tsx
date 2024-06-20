@@ -62,7 +62,9 @@ const ModalCrearProveedor = ({ onClose }: { onClose: () => void }) => {
                 value.find((articuloAgregado) => articuloAgregado.idArticulo === articulo.id)
                   ?.demoraPromedio
               }
-              onChange={(e) =>
+              onChange={(e) => {
+                if (Number(e.currentTarget.value) < 0) return;
+
                 setValue(
                   "articulos",
                   getValues("articulos").map((articuloAgregado) =>
@@ -70,8 +72,8 @@ const ModalCrearProveedor = ({ onClose }: { onClose: () => void }) => {
                       ? { ...articuloAgregado, demoraPromedio: Number(e.target.value) }
                       : articuloAgregado
                   )
-                )
-              }
+                );
+              }}
               type="number"
             />
           )}
@@ -136,12 +138,14 @@ const ModalCrearProveedor = ({ onClose }: { onClose: () => void }) => {
             {queryArticulos.isSuccess && (
               <TablaDeDatos
                 columnas={columnasTablaArticulos}
-                filas={queryArticulos.data.filter(
-                  (articulo) =>
-                    !watch("articulos").find(
-                      (articuloAgregado) => articulo.id === articuloAgregado.idArticulo
-                    )
-                )}
+                filas={queryArticulos.data
+                  .filter(
+                    (articulo) =>
+                      !watch("articulos").find(
+                        (articuloAgregado) => articulo.id === articuloAgregado.idArticulo
+                      )
+                  )
+                  .slice(0, 5)}
               />
             )}
           </div>

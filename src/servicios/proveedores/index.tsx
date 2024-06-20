@@ -14,9 +14,7 @@ export const useProveedores = (nombreBuscado: string) => {
     queryKey: ["proveedores"],
     queryFn: () =>
       (async (nombreBuscado: string) => {
-        const { data } = await axiosAPI.get<Proveedor[]>(
-          `/proveedores/buscarPorDenominacion?filtroNombre=${nombreBuscado}`
-        );
+        const { data } = await axiosAPI.get<Proveedor[]>(`/proveedores`);
         return data;
       })(nombreBuscado),
     placeholderData: keepPreviousData,
@@ -58,7 +56,7 @@ export const useCrearProveedorArticulo = () => {
   return useMutation({
     mutationFn: (dto: CrearProveedorArticuloDTO) =>
       (async (dto: CrearProveedorArticuloDTO) => {
-        const { data } = await axiosAPI.post<Proveedor>(`/proveedores`, dto);
+        const { data } = await axiosAPI.post<Proveedor>(`/proveedores/crearProveedorArticulo`, dto);
         return data;
       })(dto),
     onSuccess: () => {

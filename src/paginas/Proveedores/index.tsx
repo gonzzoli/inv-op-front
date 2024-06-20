@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import { Button, IconButton, Modal, TextField } from "@mui/material";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
@@ -6,14 +6,16 @@ import { useProveedores } from "../../servicios/proveedores";
 import ModalCrearProveedor from "./ModalCrearProveedor";
 import { Proveedor } from "../../servicios/tiposEntidades";
 import { useDebounceValue } from "usehooks-ts";
-import { Edit } from "@mui/icons-material";
+import { Edit, ShoppingCart } from "@mui/icons-material";
 import ModalEditarProveedor from "./ModalEditarProveedor";
+import ModalCrearProveedorArticulo from "./ModalAgregarArticulo";
 
 export default function PaginaProveedores() {
   const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 300);
   const queryProveedores = useProveedores(nombreBuscado);
   const [creandoProveedor, setCreandoProveedor] = useState<boolean>(false);
   const [editandoProveedor, setEditandoProveedor] = useState<Proveedor | null>(null);
+  const [agregandoArticulo, setAgregandoArticulo] = useState<Proveedor | null>(null);
 
   const columnasTabla: PropsTablaDeDatos<Proveedor>["columnas"] = [
     {
@@ -27,10 +29,14 @@ export default function PaginaProveedores() {
           <IconButton onClick={() => setEditandoProveedor(proveedor)}>
             <Edit color="info" />
           </IconButton>
+          <IconButton onClick={() => setAgregandoArticulo(proveedor)}>
+            <ShoppingCart color="success" />
+          </IconButton>
         </div>
       ),
     },
   ];
+  useEffect(() => console.log(queryProveedores.data), [queryProveedores]);
 
   return (
     <>
@@ -41,6 +47,12 @@ export default function PaginaProveedores() {
         <ModalEditarProveedor
           proveedor={editandoProveedor!}
           onClose={() => setEditandoProveedor(null)}
+        />
+      </Modal>
+      <Modal open={agregandoArticulo !== null} onClose={() => setAgregandoArticulo(null)}>
+        <ModalCrearProveedorArticulo
+          proveedor={agregandoArticulo!}
+          onClose={() => setAgregandoArticulo(null)}
         />
       </Modal>
       <div className={styles["contenedor-pantalla"]}>

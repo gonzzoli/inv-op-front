@@ -75,7 +75,10 @@ export default function PaginaDemanda() {
             )}
           </div>
           {queryArticulos.isSuccess && (
-            <TablaDeDatos columnas={columnasTablaArticulos} filas={queryArticulos.data} />
+            <TablaDeDatos
+              columnas={columnasTablaArticulos}
+              filas={queryArticulos.data.slice(0, 10)}
+            />
           )}
         </div>
         <div className={styles["tabla-demanda"]}>

@@ -20,8 +20,6 @@ export default function ModalEditarProveedor({
     defaultValues: proveedor,
   });
 
-  const [agregandoArticulo, setAgregandoArticulo] = useState(false);
-  const [eliminandoArticulo, setEliminandoArticulo] = useState<ProveedorArticulo | null>(null);
   const queryArticulosProveedor = useArticulosProveedor(proveedor.id);
 
   const columnasTabla: PropsTablaDeDatos<ProveedorArticulo>["columnas"] = [
@@ -36,7 +34,7 @@ export default function ModalEditarProveedor({
     {
       nombreMostrado: "Acciones",
       elementoMostrado: (proveedorArticulo) => (
-        <Button onClick={() => setEliminandoArticulo(proveedorArticulo)} size="small">
+        <Button onClick={() => console.log("nada")} size="small">
           Eliminar
         </Button>
       ),
@@ -45,12 +43,12 @@ export default function ModalEditarProveedor({
 
   return (
     <>
-      <Modal open={!eliminandoArticulo}>
+      {/* <Modal open={!eliminandoArticulo}>
         <ModalEliminarArticulo
           proveedorArticulo={eliminandoArticulo!}
           onClose={() => setEliminandoArticulo(null)}
         />
-      </Modal>
+      </Modal> */}
       <div className={styles["modal-editar"]}>
         <h2>Editar un Proveedor</h2>
         <form
@@ -74,7 +72,7 @@ export default function ModalEditarProveedor({
         <h2>Articulos asociados</h2>
         <TablaDeDatos columnas={columnasTabla} filas={queryArticulosProveedor.data!} />
         <Button
-          onClick={() => setAgregandoArticulo(true)}
+          // onClick={() => setAgregandoArticulo(true)}
           variant="contained"
           color="success"
           size="small"
