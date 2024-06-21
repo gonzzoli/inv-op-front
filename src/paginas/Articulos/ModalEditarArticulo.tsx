@@ -3,6 +3,7 @@ import styles from "./styles.module.scss";
 import { Button, MenuItem, TextField } from "@mui/material";
 import { Articulo } from "@src/servicios/tiposEntidades";
 import { useEditarArticulo, useModelosInventario } from "@src/servicios/articulos";
+import toast from "react-hot-toast";
 
 export default function ModalEditarArticulo({
   onClose,
@@ -28,8 +29,12 @@ export default function ModalEditarArticulo({
       <form
         className={styles["form"]}
         onSubmit={handleSubmit((dto) => {
-          mtnEditarArticulo.mutate(dto);
-          onClose();
+          mtnEditarArticulo.mutate(dto, {
+            onSuccess: () => {
+              toast.success("Articulo modificado");
+              onClose();
+            },
+          });
         })}
       >
         <Controller

@@ -26,7 +26,7 @@ export default function PaginaProveedores() {
       nombreMostrado: "Acciones",
       elementoMostrado: (proveedor) => (
         <div className={styles["celda-acciones"]}>
-          <IconButton onClick={() => setEditandoProveedor(proveedor)}>
+          <IconButton disabled onClick={() => setEditandoProveedor(proveedor)}>
             <Edit color="info" />
           </IconButton>
           <IconButton onClick={() => setAgregandoArticulo(proveedor)}>

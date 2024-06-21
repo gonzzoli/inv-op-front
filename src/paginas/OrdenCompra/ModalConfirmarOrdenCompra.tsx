@@ -14,7 +14,7 @@ export default function ModalConfirmarOrdenCompra({
   const mtnConfirmarOrdenCompra = useConfirmarOrdenCompra();
 
   return (
-    <div className={styles["modal-eliminar"]}>
+    <div className={styles["modal-crear"]}>
       <h2>Confirmar llegada orden de compra</h2>
       <p>
         <strong>Proveedor:</strong>

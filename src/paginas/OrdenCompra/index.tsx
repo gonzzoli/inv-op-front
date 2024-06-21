@@ -5,6 +5,7 @@ import { OrdenCompra } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 import { useState } from "react";
 import ModalCrearOrdenCompra from "./ModalCrearOrdenCompra";
+import ModalConfirmarOrdenCompra from "./ModalConfirmarOrdenCompra";
 
 export default function PaginaOrdenesDeCompra() {
   const queryOrdenes = useOrdenesCompra();
@@ -22,7 +23,7 @@ export default function PaginaOrdenesDeCompra() {
     },
     {
       nombreMostrado: "Estado",
-      elementoMostrado: (orden) => orden.estadoOrdenCompra,
+      elementoMostrado: (orden) => orden.nombreEstado,
     },
     {
       nombreMostrado: "Fecha pedido",
@@ -31,7 +32,7 @@ export default function PaginaOrdenesDeCompra() {
     {
       nombreMostrado: "Acciones",
       elementoMostrado: (orden) => (
-        <Button size="small" onClick={() => {}}>
+        <Button disabled={orden.nombreEstado === "CONFIRMADO"} size="small" onClick={() => setConfirmandoOrden(orden)}>
           Confirmar
         </Button>
       ),
@@ -45,7 +46,13 @@ export default function PaginaOrdenesDeCompra() {
       <Modal open={creandoOrden} onClose={() => setCreandoOrden(false)}>
         <ModalCrearOrdenCompra onClose={() => setCreandoOrden(false)} />
       </Modal>
-      <div>
+      <Modal open={!!confirmandoOrden} onClose={() => setConfirmandoOrden(null)}>
+        <ModalConfirmarOrdenCompra
+          ordenCompra={confirmandoOrden!}
+          onClose={() => setConfirmandoOrden(null)}
+        />
+      </Modal>
+      <div className={styles["contenedor-pantalla"]}>
         <Button onClick={() => setCreandoOrden(true)} variant="contained" color="success">
           Crear orden de compra
         </Button>

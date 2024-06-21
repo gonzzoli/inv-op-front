@@ -1,0 +1,39 @@
+.contenedor-pantalla {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.modal-crear,
+.modal-confirmar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  h2 {
+    margin-bottom: 1rem;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .botones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  .tablas-crear-orden {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    .inputs-orden-compra {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}

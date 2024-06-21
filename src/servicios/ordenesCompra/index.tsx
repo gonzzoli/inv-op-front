@@ -33,13 +33,15 @@ export const useConfirmarOrdenCompra = () => {
   return useMutation({
     mutationFn: (ordenCompraId: number) =>
       (async () => {
-        const { data } = await axiosAPI.get<OrdenCompra>(
+        const { data } = await axiosAPI.put<OrdenCompra>(
           `/OrdenCompra/confirmarOrden?id=${ordenCompraId}`
         );
+        console.log(data)
         return data;
       })(),
     onSuccess(_res, _dto) {
-      queryClient.invalidateQueries({ queryKey: ["ordenes-compra"] });
+      queryClient.invalidateQueries({ queryKey: ["ordenes"] });
+      queryClient.invalidateQueries({ queryKey: ["articulos"] });
     },
   });
 };

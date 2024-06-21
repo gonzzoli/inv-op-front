@@ -68,13 +68,13 @@ export default function ModalCrearOrdenCompra({ onClose }: { onClose: () => void
       <div className={styles["tablas-crear-orden"]}>
         {watch("articuloId") && (
           <p>
-            <strong>Articulo:</strong>
+            <strong>Articulo: </strong>
             {queryArticulos.data.find((articulo) => articulo.id === watch("articuloId"))!.nombre}
           </p>
         )}
         {watch("proveedorId") && (
           <p>
-            <strong>Proveedor:</strong>
+            <strong>Proveedor: </strong>
             {
               queryProveedores.data.find((proveedor) => proveedor.id === watch("proveedorId"))!
                 .nombre
@@ -82,13 +82,24 @@ export default function ModalCrearOrdenCompra({ onClose }: { onClose: () => void
           </p>
         )}
         {!watch("articuloId") && (
-          <TablaDeDatos columnas={columnasTablaArticulos} filas={queryArticulos.data} />
+          <>
+            <TextField
+              label="Nombre del articulo"
+              size="small"
+              onChange={(e) => setNombreArticuloBuscado(e.target.value)}
+            />
+            <TablaDeDatos columnas={columnasTablaArticulos} filas={queryArticulos.data} />
+          </>
         )}
-        {watch("articuloId") && (
-          <TablaDeDatos columnas={columnasTablaProveedores} filas={queryProveedores.data} />
-        )}
-        {watch("articuloId") && (
-          <TablaDeDatos columnas={columnasTablaProveedores} filas={queryProveedores.data} />
+        {watch("articuloId") && !watch("proveedorId") && (
+          <>
+            <TextField
+              label="Nombre del proveedor"
+              size="small"
+              onChange={(e) => setNombreProveedorBuscado(e.target.value)}
+            />
+            <TablaDeDatos columnas={columnasTablaProveedores} filas={queryProveedores.data} />
+          </>
         )}
         {watch("articuloId") && watch("proveedorId") && (
           <div className={styles["inputs-orden-compra"]}>

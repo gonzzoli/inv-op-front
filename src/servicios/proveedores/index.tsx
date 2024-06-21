@@ -9,11 +9,13 @@ import {
 } from "./dto";
 import toast from "react-hot-toast";
 
-export const useProveedores = (nombreBuscado: string) => {
+export const useProveedores = (nombreBuscado = "") => {
   return useQuery({
-    queryKey: ["proveedores"],
+    queryKey: ["proveedores", nombreBuscado],
     queryFn: () =>
       (async (nombreBuscado: string) => {
+        console.log(nombreBuscado);
+        // no me funcionaba buscar por nombre
         const { data } = await axiosAPI.get<Proveedor[]>(`/proveedores`);
         return data;
       })(nombreBuscado),
@@ -56,6 +58,7 @@ export const useCrearProveedorArticulo = () => {
   return useMutation({
     mutationFn: (dto: CrearProveedorArticuloDTO) =>
       (async (dto: CrearProveedorArticuloDTO) => {
+        console.log(dto)
         const { data } = await axiosAPI.post<Proveedor>(`/proveedores/crearProveedorArticulo`, dto);
         return data;
       })(dto),
