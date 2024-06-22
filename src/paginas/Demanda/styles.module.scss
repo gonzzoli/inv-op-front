@@ -1,0 +1,38 @@
+.contenedor-pagina {
+    .contenedor-visualizacion {
+        .busqueda-articulos {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            .inputs-busqueda {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                min-width: 300px;
+            }
+        }
+        .tabla-demanda {
+            margin-top: 3rem;
+            h2 {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+        }
+    }
+    .contenedor-prediccion {
+        margin-top: 3rem;
+        .inputs-prediccion {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .resultado-prediccion {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+    }
+}

@@ -55,17 +55,22 @@ export type OrdenCompra = {
   nombreEstado: EstadoOrdenCompra;
 };
 
+export type TipoPeriodo = "MENSUAL" | "TRIMESTRAL" | "SEMESTRAL" | "ANUAL" | "BIMESTRAL";
+
 export type DemandaHistorica = {
   id: number;
   articulo: Articulo;
   cantidadTotal: number;
-  fechaDesde: Date;
-  fechaHasta: Date;
-  tipoPeriodo: string;
+  fechaDesde: string;
+  fechaHasta: string;
+  tipoPeriodo: TipoPeriodo;
 };
 
-export type TipoPeriodoDemanda = {
-  id: number;
-  nombre: string;
-  cantidadDias: number;
+export type PrediccionDemanda = {
+  cantidadPredecida: number;
+  fechaDesdePrediccion: string;
+  fechaHastaPrediccion: string;
+  fechaPrediccionRealizada: string;
+  nombreArticulo: string;
+  idArticulo: number;
 };

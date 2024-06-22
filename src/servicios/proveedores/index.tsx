@@ -58,12 +58,11 @@ export const useCrearProveedorArticulo = () => {
   return useMutation({
     mutationFn: (dto: CrearProveedorArticuloDTO) =>
       (async (dto: CrearProveedorArticuloDTO) => {
-        console.log(dto)
+        console.log(dto);
         const { data } = await axiosAPI.post<Proveedor>(`/proveedores/crearProveedorArticulo`, dto);
         return data;
       })(dto),
     onSuccess: () => {
-      toast.success("Articulo agregado correctamente al proveedor.");
       queryClient.invalidateQueries({ queryKey: ["proveedores"] });
     },
   });

@@ -1,31 +1,45 @@
-import { Articulo, DemandaHistorica, TipoPeriodoDemanda } from "../tiposEntidades";
+import { DemandaHistorica, PrediccionDemanda, TipoPeriodo } from "../tiposEntidades";
 import axiosAPI from "../axiosAPI";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { PrediccionDemandaDTO } from "./dto";
 
-export const useDemandaHistorica = (
-  articulo: Articulo | null,
-  tipoPeriodo: TipoPeriodoDemanda | null
-) => {
+export const useDemandaHistorica = (articuloId: number | null, tipoPeriodo: TipoPeriodo | null) => {
   return useQuery({
-    queryKey: ["demanda-historica"],
+    queryKey: ["demanda-historica", articuloId, tipoPeriodo],
     queryFn: () =>
       (async () => {
         const { data } = await axiosAPI.get<DemandaHistorica[]>(
-          `/DemandaHistorica/${articulo!.id}`
+          `/articulo/${articuloId}/demandasHistoricas/${tipoPeriodo!}`
         );
         return data;
       })(),
-    enabled: !!articulo && !!tipoPeriodo,
+    enabled: !!articuloId && !!tipoPeriodo,
   });
 };
 
-export const useTiposPeriodoDemanda = () => {
+export const usePrediccionDemanda = (dto: PrediccionDemandaDTO) => {
+  const queryClient = useQueryClient();
   return useQuery({
-    queryKey: ["demanda-historica", "tipos-periodo"],
+    queryKey: ["prediccion", dto],
     queryFn: () =>
       (async () => {
-        const { data } = await axiosAPI.get<TipoPeriodoDemanda[]>("/demanda/periodos");
+        console.log("SOLICITANDO", dto);
+        const { data } = await axiosAPI.post<PrediccionDemanda[]>(`/ventas/prediccionDemanda`, dto);
+        console.log("RESP", data);
+        queryClient.invalidateQueries({
+          queryKey: ["demanda-historica", dto.articuloId, dto.tipoPeriodo],
+        });
         return data;
       })(),
+    retry: false,
+    refetchInterval: false,
+    placeholderData: keepPreviousData,
+    enabled:
+      !!dto.articuloId &&
+      !!dto.tipoPeriodo &&
+      !!dto.tipoPrediccion &&
+      !!dto.cantidadPredicciones &&
+      !!dto.numeroPeriodos &&
+      !!dto.fechaDesdePrediccion,
   });
 };
