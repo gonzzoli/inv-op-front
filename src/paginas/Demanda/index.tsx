@@ -209,6 +209,30 @@ export default function PaginaDemanda() {
             )}
           />
         </div>
+        {watch("tipoPrediccion") === "PROM_MOVIL_PONDERADO" && (
+          <div className={styles["ponderaciones"]}>
+            {Array.from({ length: watch("numeroPeriodos") }).map((_, key) => (
+              <Controller
+                key={key}
+                name={`ponderaciones.${key}`}
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    size="small"
+                    label={`Ponderación periodo ${key + 1}`}
+                    value={value}
+                    onChange={(e) => {
+                      if (Number(e.currentTarget.value) < 0) return;
+                      onChange(Number(e.currentTarget.value));
+                    }}
+                    type="number"
+                  />
+                )}
+              />
+            ))}
+          </div>
+        )}
         {queryPrediccion.data && (
           <div className={styles["resultado-prediccion"]}>
             <h2>Resultados</h2>

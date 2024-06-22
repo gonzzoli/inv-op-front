@@ -40,6 +40,9 @@ export const usePrediccionDemanda = (dto: PrediccionDemandaDTO) => {
       !!dto.tipoPrediccion &&
       !!dto.cantidadPredicciones &&
       !!dto.numeroPeriodos &&
-      !!dto.fechaDesdePrediccion,
+      !!dto.fechaDesdePrediccion &&
+      (dto.tipoPrediccion === "PROM_MOVIL_PONDERADO"
+        ? dto.ponderaciones?.length === dto.numeroPeriodos
+        : true),
   });
 };

@@ -23,8 +23,13 @@
         margin-top: 3rem;
         .inputs-prediccion {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .ponderaciones{
+            display: flex;
             gap: 1rem;
             margin-top: 1rem;
         }
