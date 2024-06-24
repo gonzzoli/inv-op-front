@@ -196,6 +196,7 @@ export default function PaginaDemanda() {
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <DatePicker
+                shouldDisableDate={(fecha) => !fecha.isSame(fecha.startOf("month"))}
                 label="Fecha de periodo a predecir"
                 format="YYYY-MM-DD"
                 value={dayjs(value) ?? dayjs()}
