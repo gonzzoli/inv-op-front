@@ -1,9 +1,16 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Button, IconButton, TextField } from "@mui/material";
-import { useCrearProveedorArticulo } from "@servicios/proveedores";
+import {
+  useCrearProveedorArticulo,
+  useElegirProveedorArticuloPredeterminado,
+} from "@servicios/proveedores";
 import { useDebounceValue } from "usehooks-ts";
-import { useArticulos } from "@servicios/articulos";
+import {
+  ResArticulosDeProveedor,
+  useArticulos,
+  useArticulosDeProveedor,
+} from "@servicios/articulos";
 import TablaDeDatos, { PropsTablaDeDatos } from "@src/componentes/Tabla";
 import { Articulo, Proveedor } from "@src/servicios/tiposEntidades";
 import { Add } from "@mui/icons-material";
@@ -20,15 +27,11 @@ export default function ModalCrearProveedorArticulo({
   const mtnCrearProveedorArticulo = useCrearProveedorArticulo();
   const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 200);
   const queryArticulos = useArticulos(nombreBuscado);
+  const queryArticulosDeProveedor = useArticulosDeProveedor(proveedor.id);
+  const mtnActualizarProveedorPredeterminado = useElegirProveedorArticuloPredeterminado();
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useForm<CrearProveedorArticuloDTO>({
-    defaultValues: { proveedorId: proveedor.id },
+  const { control, handleSubmit, watch, setValue } = useForm<CrearProveedorArticuloDTO>({
+    defaultValues: { proveedorId: proveedor.id, nivelDeServicio: 1.65, anoCalculo: 2024 },
   });
 
   const columnasTablaArticulos: PropsTablaDeDatos<Articulo>["columnas"] = [
@@ -39,17 +42,69 @@ export default function ModalCrearProveedorArticulo({
     {
       nombreMostrado: "Añadir",
       elementoMostrado: (articulo) => (
-        <IconButton color="success" onClick={() => setValue("articuloId", articulo.id)}>
+        <IconButton
+          color="success"
+          onClick={() => {
+            setValue("articuloId", articulo.id);
+          }}
+        >
           <Add />
         </IconButton>
       ),
     },
   ];
 
+  const columnasTablaArticulosProveedor: PropsTablaDeDatos<ResArticulosDeProveedor>["columnas"] = [
+    {
+      nombreMostrado: "Articulo",
+      elementoMostrado: (articulo) => articulo.nombre,
+    },
+    {
+      nombreMostrado: "CGI",
+      elementoMostrado: (articulo) => articulo.CGI,
+    },
+    {
+      nombreMostrado: "Acciones",
+      elementoMostrado: (articulo) => (
+        <div>
+          <Button
+            disabled={articulo.esPredeterminado}
+            onClick={() =>
+              mtnActualizarProveedorPredeterminado.mutate(articulo.idProveedorArticulo, {
+                onSuccess: () => {
+                  toast.success("Se actualizo el proveedor predeterminado.");
+                  onClose();
+                },
+              })
+            }
+            size="small"
+            color="info"
+            variant="contained"
+          >
+            Predeterminado
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  if (!queryArticulos.isSuccess || !queryArticulosDeProveedor.isSuccess) return null;
+
   return (
     <>
       <div className={styles["modal-crear"]}>
-        <h2>Agregar articulo a un proveedor</h2>
+        <h2>Articulos del proveedor</h2>
+        {!watch("articuloId") && (
+          <div className={styles["articulos-proveedor"]}>
+            {queryArticulosDeProveedor.data.length > 0 && (
+              <TablaDeDatos
+                columnas={columnasTablaArticulosProveedor}
+                filas={queryArticulosDeProveedor.data}
+              />
+            )}
+          </div>
+        )}
+
         <form
           className={styles["form"]}
           onSubmit={handleSubmit((dto) =>
@@ -69,15 +124,27 @@ export default function ModalCrearProveedorArticulo({
                 size="small"
                 onChange={(e) => setNombreBuscado(e.target.value)}
               />
-              {queryArticulos.isSuccess && (
-                <TablaDeDatos
-                  columnas={columnasTablaArticulos}
-                  filas={queryArticulos.data.slice(0, 5)}
-                />
-              )}
+              <TablaDeDatos
+                columnas={columnasTablaArticulos}
+                filas={queryArticulos.data
+                  .filter(
+                    (articulo) =>
+                      !queryArticulosDeProveedor.data.find(
+                        (articuloProveedor) => articulo.id === articuloProveedor.idArticulo
+                      )
+                  )
+                  .slice(0, 10)}
+              />
             </div>
           ) : (
             <div className={styles["contenedor-inputs"]}>
+              <p>
+                <strong>Articulo: </strong>
+                {
+                  queryArticulos.data.find((articulo) => articulo.id === watch("articuloId"))!
+                    .nombre
+                }
+              </p>
               <Controller
                 control={control}
                 name="demora"
@@ -114,12 +181,12 @@ export default function ModalCrearProveedorArticulo({
               />
               <Controller
                 control={control}
-                name="demanda"
+                name="precioPorUnidad"
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     size="small"
-                    label="Demanda"
+                    label="Precio por unidad"
                     value={value}
                     onChange={(e) => {
                       if (Number(e.currentTarget.value) < 0) return;
@@ -129,14 +196,43 @@ export default function ModalCrearProveedorArticulo({
                   />
                 )}
               />
+              <p>
+                <strong>Nivel de servicio: </strong> {watch("nivelDeServicio")}{" "}
+              </p>
+              <p>
+                <strong>Modelo de inventario: </strong>{" "}
+                {
+                  queryArticulos.data.find((articulo) => articulo.id === watch("articuloId"))
+                    ?.modeloInventario
+                }{" "}
+              </p>
+              {queryArticulos.data.find((articulo) => articulo.id === watch("articuloId"))
+                ?.modeloInventario === "INTERVALO_FIJO" && (
+                <Controller
+                  control={control}
+                  name="periodoDeRevision"
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      size="small"
+                      label="Periodo de revisión"
+                      value={value}
+                      onChange={(e) => {
+                        if (Number(e.currentTarget.value) < 0) return;
+                        onChange(Number(e.currentTarget.value));
+                      }}
+                      type="number"
+                    />
+                  )}
+                />
+              )}
               <Controller
                 control={control}
-                name="precioPorUnidad"
+                name="anoCalculo"
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     size="small"
-                    label="Precio por unidad"
+                    label="Año para calculos de inventario"
                     value={value}
                     onChange={(e) => {
                       if (Number(e.currentTarget.value) < 0) return;

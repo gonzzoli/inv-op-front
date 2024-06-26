@@ -14,14 +14,8 @@ export default function PaginaArticulos() {
   const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 300);
   const queryArticulos = useArticulos(nombreBuscado);
   const [creandoArticulo, setCreandoArticulo] = useState<boolean>(false);
-  const [editandoArticulo, setEditandoArticulo] = useState<null | {
-    nombre: string;
-    stockActual: number;
-  }>(null);
-  const [eliminandoArticulo, setEliminandoArticulo] = useState<null | {
-    nombre: string;
-    stockActual: number;
-  }>(null);
+  const [editandoArticulo, setEditandoArticulo] = useState<null | Articulo>(null);
+  const [eliminandoArticulo, setEliminandoArticulo] = useState<null | Articulo>(null);
 
   const columnasTabla: PropsTablaDeDatos<Articulo>["columnas"] = [
     {

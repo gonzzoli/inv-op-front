@@ -1,11 +1,15 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Button, Modal, TextField } from "@mui/material";
-import { Proveedor, ProveedorArticulo } from "../../servicios/tiposEntidades";
+import {
+  EstadoArticulo,
+  ModeloInventario,
+  Proveedor,
+  ProveedorArticulo,
+} from "../../servicios/tiposEntidades";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
-import { useState } from "react";
 import ModalEliminarArticulo from "./ModalEliminarArticulo";
-import { useArticulosProveedor } from "../../servicios/proveedores";
+import { useArticulosDeProveedor } from "@src/servicios/articulos";
 
 type DatosFormularioEditarProveedor = Proveedor;
 
@@ -20,12 +24,23 @@ export default function ModalEditarProveedor({
     defaultValues: proveedor,
   });
 
-  const queryArticulosProveedor = useArticulosProveedor(proveedor.id);
+  const queryArticulosProveedor = useArticulosDeProveedor(proveedor.id);
 
-  const columnasTabla: PropsTablaDeDatos<ProveedorArticulo>["columnas"] = [
+  const columnasTabla: PropsTablaDeDatos<{
+    costoAlmacenamiento: number;
+    nombre: string;
+    stockActual: number;
+    estadoArticulo: EstadoArticulo | null;
+    modeloInventario: ModeloInventario | null;
+    CGI: number;
+    demoraPromedio: number;
+    idProveedorArticulo: number;
+    idArticulo: number;
+    idProveedor: number;
+  }>["columnas"] = [
     {
       nombreMostrado: "Nombre",
-      elementoMostrado: (proveedorArticulo) => proveedorArticulo.articulo.nombre,
+      elementoMostrado: (proveedorArticulo) => proveedorArticulo.nombre,
     },
     {
       nombreMostrado: "Demora",

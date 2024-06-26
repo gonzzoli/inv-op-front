@@ -1,3 +1,5 @@
+import { ModeloInventario } from "../tiposEntidades";
+
 export type CrearProveedorDTO = {
   nombre: string;
   articulos: {
@@ -16,8 +18,10 @@ export type CrearProveedorArticuloDTO = {
   articuloId: number;
   demora: number;
   costoPedido: number;
-  demanda: number;
   precioPorUnidad: number;
+  nivelDeServicio: number;
+  periodoDeRevision?: number;
+  anoCalculo: number;
 };
 
 export type EditarProveedorArticuloDTO = {

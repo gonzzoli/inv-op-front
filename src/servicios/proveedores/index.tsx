@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
-import { Proveedor, ProveedorArticulo } from "../tiposEntidades";
+import { EstadoArticulo, ModeloInventario, Proveedor, ProveedorArticulo } from "../tiposEntidades";
 import {
   CrearProveedorArticuloDTO,
   CrearProveedorDTO,
@@ -8,6 +8,7 @@ import {
   EliminarProveedorArticuloDTO,
 } from "./dto";
 import toast from "react-hot-toast";
+import dayjs from "dayjs";
 
 export const useProveedores = (nombreBuscado = "") => {
   return useQuery({
@@ -53,13 +54,40 @@ export const useEditarProveedor = () => {
   });
 };
 
+export const useElegirProveedorArticuloPredeterminado = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (proveedorArticuloId: number) =>
+      (async (proveedorArticuloId: number) => {
+        const { data } = await axiosAPI.put<Proveedor>(
+          `/proveedores/proveedorPredeterminado/${proveedorArticuloId}`
+        );
+        return data;
+      })(proveedorArticuloId),
+    onSuccess: (_res, proveedorId) => {
+      toast.success("Provedor editado correctamente");
+      queryClient.invalidateQueries({ queryKey: ["proveedores", proveedorId, "articulos"] });
+      queryClient.invalidateQueries({ queryKey: ["proveedores"] });
+    },
+  });
+};
+
 export const useCrearProveedorArticulo = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (dto: CrearProveedorArticuloDTO) =>
       (async (dto: CrearProveedorArticuloDTO) => {
         console.log(dto);
-        const { data } = await axiosAPI.post<Proveedor>(`/proveedores/crearProveedorArticulo`, dto);
+        const { data } = await axiosAPI.post<Proveedor>(`/proveedores/crearProveedorArticulo`, {
+          L: dto.demora,
+          T: dto.periodoDeRevision,
+          Z: dto.nivelDeServicio,
+          idArticulo: dto.articuloId,
+          idProveedor: dto.proveedorId,
+          costoPedido: dto.costoPedido,
+          year: dto.anoCalculo,
+          precioUnidad: dto.precioPorUnidad,
+        });
         return data;
       })(dto),
     onSuccess: () => {
@@ -80,17 +108,5 @@ export const useEliminarProveedorArticulo = () => {
       toast.success("Articulo eliminado del proveedor.");
       queryClient.invalidateQueries({ queryKey: ["proveedores"] });
     },
-  });
-};
-
-export const useArticulosProveedor = (proveedorId: number) => {
-  return useQuery({
-    queryKey: ["proveedor"],
-    queryFn: () =>
-      (async (proveedorId: number) => {
-        const { data } = await axiosAPI.get<ProveedorArticulo[]>(`/proveedores${proveedorId}`);
-        return data;
-      })(proveedorId),
-    enabled: !!proveedorId,
   });
 };

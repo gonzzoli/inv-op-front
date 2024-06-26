@@ -1,20 +1,15 @@
+export type ModeloInventario = "LOTE_FIJO" | "INTERVALO_FIJO";
+
 export type Articulo = {
   id: number;
   nombre: string;
   stockActual: number;
   estadoArticulo: string;
-  modeloInventario: string;
+  modeloInventario: ModeloInventario;
   costoAlmacenamiento: number;
-  loteOptimo: number;
-  tiempoEntrePedidos: number;
 };
 
 export type EstadoArticulo = "A_REPONER" | "DISPONIBLE" | "NO_DISPONIBLE";
-
-export type ModeloInventario = {
-  id: number;
-  nombre: string;
-};
 
 export type Venta = {
   id: number;

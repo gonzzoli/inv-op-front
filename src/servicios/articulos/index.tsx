@@ -1,4 +1,4 @@
-import { Articulo, ModeloInventario } from "../tiposEntidades";
+import { Articulo, EstadoArticulo, ModeloInventario } from "../tiposEntidades";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
 
@@ -8,6 +8,7 @@ export const useArticulos = (nombre: string) => {
     queryFn: () =>
       (async () => {
         const { data } = await axiosAPI.get<Articulo[]>(`/articulo/buscar?filtro=${nombre}`);
+        console.log(data);
         return data;
       })(),
     placeholderData: keepPreviousData,
@@ -39,6 +40,39 @@ export const useEditarArticulo = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articulos"] });
     },
+  });
+};
+
+export type ResArticulosDeProveedor = {
+  costoAlmacenamiento: number;
+  nombre: string;
+  stockActual: number;
+  estadoArticulo: EstadoArticulo | null;
+  modeloInventario: ModeloInventario | null;
+  demoraPromedio: number;
+  CGI: number;
+  esPredeterminado: boolean;
+  idProveedorArticulo: number;
+  idArticulo: number;
+  idProveedor: number;
+};
+export const useArticulosDeProveedor = (proveedorId: number) => {
+  return useQuery({
+    queryKey: ["proveedor", proveedorId, "articulos"],
+    queryFn: () =>
+      (async () => {
+        try {
+          const { data } = await axiosAPI.get<ResArticulosDeProveedor[]>(
+            `/proveedorArticulo/articulosxproveedor/${proveedorId}`
+          );
+          console.log("PROVOSDOS", data);
+          return data;
+        } catch (error) {
+          return [];
+        }
+      })(),
+    retry: false,
+    placeholderData: keepPreviousData,
   });
 };
 
