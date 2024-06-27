@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
 import { useDemandaHistorica, usePrediccionDemanda } from "../../servicios/demanda";
-import { Articulo, DemandaHistorica, TipoPeriodo } from "../../servicios/tiposEntidades";
+import { Articulo, DemandaHistorica, TipoPeriodo, Venta } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useArticulos } from "../../servicios/articulos";
@@ -10,7 +10,26 @@ import { Controller, useForm } from "react-hook-form";
 import { PrediccionDemandaDTO, TipoPrediccion } from "@src/servicios/demanda/dto";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import {
+  DemandaPorPeriodo,
+  useDemandaHistoricaPorArticuloPeriodo,
+  useVentasPorArticulo,
+} from "@src/servicios/ventas";
 
+const MESES = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
 const TIPOS_PERIODO: TipoPeriodo[] = ["ANUAL", "SEMESTRAL", "TRIMESTRAL", "MENSUAL", "BIMESTRAL"];
 const TIPOS_PREDICCION: TipoPrediccion[] = ["PROM_MOVIL", "PROM_MOVIL_PONDERADO"];
 
@@ -31,7 +50,11 @@ export default function PaginaDemanda() {
   const [nombreBuscado, setNombreBuscado] = useDebounceValue("", 300);
   const [articuloElegido, setArticuloElegido] = useState<Articulo | null>(null);
   const queryArticulos = useArticulos(nombreBuscado);
-  const queryDemanda = useDemandaHistorica(watch("articuloId"), tipoPeriodoElegido);
+  // const queryDemanda = useDemandaHistorica(watch("articuloId"), tipoPeriodoElegido);
+  const queryVentasDeArticulo = useDemandaHistoricaPorArticuloPeriodo(
+    watch("articuloId"),
+    tipoPeriodoElegido
+  );
 
   const queryPrediccion = usePrediccionDemanda(watch());
 
@@ -57,24 +80,21 @@ export default function PaginaDemanda() {
     },
   ];
 
-  const columnasTablaDemandas: PropsTablaDeDatos<DemandaHistorica>["columnas"] = [
+  const columnasTablaDemandas: PropsTablaDeDatos<DemandaPorPeriodo>["columnas"] = [
     {
-      nombreMostrado: "Articulo",
-      elementoMostrado: (demanda) => demanda.articulo.nombre,
+      nombreMostrado: "Periodo",
+      elementoMostrado: (demanda) =>
+        `${demanda.fechaInicioPeriodo.format("YYYY-MM-DD")} / ${demanda.fechaFinPeriodo.format("YYYY-MM-DD")}`,
     },
     {
       nombreMostrado: "Cantidad vendida",
-      elementoMostrado: (demanda) => demanda.cantidadTotal,
+      elementoMostrado: (demanda) => demanda.cantidadVendida,
     },
-    {
-      nombreMostrado: "Rango fecha",
-      elementoMostrado: (demanda) => `${demanda.fechaDesde} / ${demanda.fechaHasta}`,
-    },
+    // {
+    //   nombreMostrado: "Rango fecha",
+    //   elementoMostrado: (demanda) => `${demanda.fechaDesde} / ${demanda.fechaHasta}`,
+    // },
   ];
-
-  useEffect(() => {
-    console.log(watch());
-  }, [watch()]);
 
   return (
     <div className={styles["contenedor-pagina"]}>
@@ -119,8 +139,8 @@ export default function PaginaDemanda() {
               ? `Demanda ${tipoPeriodoElegido} para ${articuloElegido.nombre}`
               : "Demanda"}
           </h2>
-          {queryDemanda.isSuccess && (
-            <TablaDeDatos columnas={columnasTablaDemandas} filas={queryDemanda.data} />
+          {queryVentasDeArticulo.isSuccess && (
+            <TablaDeDatos columnas={columnasTablaDemandas} filas={queryVentasDeArticulo.data} />
           )}
         </div>
       </div>

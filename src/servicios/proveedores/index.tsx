@@ -110,3 +110,18 @@ export const useEliminarProveedorArticulo = () => {
     },
   });
 };
+
+export const useEditarProveedorArticulo = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (dto: EliminarProveedorArticuloDTO) =>
+      (async (dto: EliminarProveedorArticuloDTO) => {
+        const { data } = await axiosAPI.post<Proveedor>(`/proveedores`, dto);
+        return data;
+      })(dto),
+    onSuccess: () => {
+      toast.success("Articulo eliminado del proveedor.");
+      queryClient.invalidateQueries({ queryKey: ["proveedores"] });
+    },
+  });
+};

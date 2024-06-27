@@ -8,7 +8,6 @@ export const useArticulos = (nombre: string) => {
     queryFn: () =>
       (async () => {
         const { data } = await axiosAPI.get<Articulo[]>(`/articulo/buscar?filtro=${nombre}`);
-        console.log(data);
         return data;
       })(),
     placeholderData: keepPreviousData,
@@ -50,7 +49,7 @@ export type ResArticulosDeProveedor = {
   estadoArticulo: EstadoArticulo | null;
   modeloInventario: ModeloInventario | null;
   demoraPromedio: number;
-  CGI: number;
+  cgi: number;
   esPredeterminado: boolean;
   idProveedorArticulo: number;
   idArticulo: number;

@@ -61,7 +61,7 @@ export default function ModalCrearProveedorArticulo({
     },
     {
       nombreMostrado: "CGI",
-      elementoMostrado: (articulo) => articulo.CGI,
+      elementoMostrado: (articulo) => articulo.cgi,
     },
     {
       nombreMostrado: "Acciones",
