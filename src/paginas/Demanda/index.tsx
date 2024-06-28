@@ -31,7 +31,7 @@ const MESES = [
   "Diciembre",
 ];
 const TIPOS_PERIODO: TipoPeriodo[] = ["ANUAL", "SEMESTRAL", "TRIMESTRAL", "MENSUAL", "BIMESTRAL"];
-const TIPOS_PREDICCION: TipoPrediccion[] = ["PROM_MOVIL", "PROM_MOVIL_PONDERADO"];
+const TIPOS_PREDICCION: TipoPrediccion[] = ["PROM_MOVIL", "PROM_MOVIL_PONDERADO", "EXPONENCIAL"];
 
 export default function PaginaDemanda() {
   const [tipoPeriodoElegido, setTipoPeriodoElegido] = useState<TipoPeriodo>("MENSUAL");
@@ -252,6 +252,27 @@ export default function PaginaDemanda() {
                 )}
               />
             ))}
+          </div>
+        )}
+        {watch("tipoPrediccion") === "EXPONENCIAL" && (
+          <div className={styles["ponderaciones"]}>
+            <Controller
+              name="alpha"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  size="small"
+                  label="Alpha de prediccion"
+                  value={value}
+                  onChange={(e) => {
+                    if (Number(e.currentTarget.value) < 0 || Number(e.currentTarget.value) > 1) return;
+                    onChange(Number(e.currentTarget.value));
+                  }}
+                  type="number"
+                />
+              )}
+            />
           </div>
         )}
         {queryPrediccion.data && (
