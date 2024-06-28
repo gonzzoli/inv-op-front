@@ -60,6 +60,10 @@ export default function ModalCrearProveedorArticulo({
       elementoMostrado: (articulo) => articulo.nombre,
     },
     {
+      nombreMostrado: "Modelo",
+      elementoMostrado: (articulo) => articulo.modeloInventario,
+    },
+    {
       nombreMostrado: "CGI",
       elementoMostrado: (articulo) => articulo.cgi,
     },
@@ -73,7 +77,7 @@ export default function ModalCrearProveedorArticulo({
     },
     {
       nombreMostrado: "Punto pedido",
-      elementoMostrado: (articulo) => articulo.pp,
+      elementoMostrado: (articulo) => (articulo.modeloInventario === "LOTE_FIJO" ? articulo.pp : ""),
     },
     {
       nombreMostrado: "Acciones",

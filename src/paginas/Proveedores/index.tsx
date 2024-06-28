@@ -29,9 +29,13 @@ export default function PaginaProveedores() {
           <IconButton disabled onClick={() => setEditandoProveedor(proveedor)}>
             <Edit color="info" />
           </IconButton>
-          <IconButton onClick={() => setAgregandoArticulo(proveedor)}>
-            <ShoppingCart color="success" />
-          </IconButton>
+          <Button
+            color="info"
+            variant="contained"
+            onClick={() => setAgregandoArticulo(proveedor)}
+          >
+            Ver/Agregar articulos
+          </Button>
         </div>
       ),
     },
