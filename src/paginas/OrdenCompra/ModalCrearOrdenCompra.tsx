@@ -4,12 +4,13 @@ import { Button, IconButton, TextField } from "@mui/material";
 import { useArticulos } from "@src/servicios/articulos";
 import { Controller, useForm } from "react-hook-form";
 import { CrearOrdenCompraDTO } from "@src/servicios/ordenesCompra/dto";
-import { useProveedores } from "@src/servicios/proveedores";
+import { useProveedorPredeterminadoDeArticulo, useProveedores } from "@src/servicios/proveedores";
 import { Articulo, Proveedor } from "@src/servicios/tiposEntidades";
 import TablaDeDatos, { PropsTablaDeDatos } from "@src/componentes/Tabla";
 import { Add } from "@mui/icons-material";
 import { useCrearOrdenCompra } from "@src/servicios/ordenesCompra";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 export default function ModalCrearOrdenCompra({ onClose }: { onClose: () => void }) {
   const [nombreArticuloBuscado, setNombreArticuloBuscado] = useDebounceValue("", 200);
@@ -19,6 +20,8 @@ export default function ModalCrearOrdenCompra({ onClose }: { onClose: () => void
   const mtnCrearOrdenCompra = useCrearOrdenCompra();
 
   const { control, handleSubmit, watch, setValue } = useForm<CrearOrdenCompraDTO>();
+
+  const queryProveedorPredeterminado = useProveedorPredeterminadoDeArticulo(watch("articuloId"));
 
   const columnasTablaArticulos: PropsTablaDeDatos<Articulo>["columnas"] = [
     {
@@ -49,6 +52,11 @@ export default function ModalCrearOrdenCompra({ onClose }: { onClose: () => void
       ),
     },
   ];
+
+  useEffect(() => {
+    if (queryProveedorPredeterminado.data)
+      setValue("proveedorId", queryProveedorPredeterminado.data.id);
+  }, [queryProveedorPredeterminado.data]);
 
   if (!queryArticulos.isSuccess || !queryProveedores.isSuccess) return <h1>Cargando...</h1>;
 

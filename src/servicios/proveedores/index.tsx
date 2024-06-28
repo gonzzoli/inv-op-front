@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosAPI from "../axiosAPI";
-import { EstadoArticulo, ModeloInventario, Proveedor, ProveedorArticulo } from "../tiposEntidades";
+import { Proveedor } from "../tiposEntidades";
 import {
   CrearProveedorArticuloDTO,
   CrearProveedorDTO,
@@ -8,7 +8,6 @@ import {
   EliminarProveedorArticuloDTO,
 } from "./dto";
 import toast from "react-hot-toast";
-import dayjs from "dayjs";
 
 export const useProveedores = (nombreBuscado = "") => {
   return useQuery({
@@ -123,5 +122,22 @@ export const useEditarProveedorArticulo = () => {
       toast.success("Articulo eliminado del proveedor.");
       queryClient.invalidateQueries({ queryKey: ["proveedores"] });
     },
+  });
+};
+
+export const useProveedorPredeterminadoDeArticulo = (articuloId: number | null) => {
+  return useQuery({
+    queryKey: ["articulos", articuloId, "proveedor-predeterminado"],
+    queryFn: () =>
+      (async (articuloId: number) => {
+        const { data } = await axiosAPI.get<Proveedor>(
+          `/proveedorArticulo/getproveedorPredeterminado/${articuloId}`
+        );
+        console.log("PROVEEDOR PRED", data);
+        return data;
+      })(articuloId!),
+    enabled: !!articuloId,
+    retry: false,
+    refetchInterval: false,
   });
 };
