@@ -77,6 +77,7 @@ export default function PaginaDemanda() {
           onClick={() => {
             setValue("articuloId", articulo.id);
             setArticuloElegido(articulo);
+            if (articulo.metodoPrediccion) setValue("tipoPrediccion", articulo.metodoPrediccion);
           }}
         >
           Seleccionar
