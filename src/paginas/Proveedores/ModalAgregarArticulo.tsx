@@ -64,6 +64,18 @@ export default function ModalCrearProveedorArticulo({
       elementoMostrado: (articulo) => articulo.cgi,
     },
     {
+      nombreMostrado: "Lote Optimo",
+      elementoMostrado: (articulo) => articulo.q,
+    },
+    {
+      nombreMostrado: "Stock Seguridad",
+      elementoMostrado: (articulo) => articulo.stockSeguridad,
+    },
+    {
+      nombreMostrado: "Punto pedido",
+      elementoMostrado: (articulo) => articulo.pp,
+    },
+    {
       nombreMostrado: "Acciones",
       elementoMostrado: (articulo) => (
         <div>

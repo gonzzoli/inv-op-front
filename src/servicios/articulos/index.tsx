@@ -50,6 +50,9 @@ export type ResArticulosDeProveedor = {
   modeloInventario: ModeloInventario | null;
   demoraPromedio: number;
   cgi: number;
+  q: number;
+  pp: number;
+  stockSeguridad: number;
   esPredeterminado: boolean;
   idProveedorArticulo: number;
   idArticulo: number;
