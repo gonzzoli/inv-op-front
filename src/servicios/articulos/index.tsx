@@ -17,7 +17,7 @@ export const useArticulos = (nombre: string) => {
 export const useCrearArticulo = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (articulo: Omit<Articulo, "id" | "loteOptimo" | "tiempoEntrePedidos">) =>
+    mutationFn: (articulo: Omit<Articulo, "id">) =>
       (async () => {
         const { data } = await axiosAPI.post<Articulo>(`/articulo`, articulo);
         return data;

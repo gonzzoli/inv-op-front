@@ -35,7 +35,7 @@ const MESES = [
   "Diciembre",
 ];
 const TIPOS_PERIODO: TipoPeriodo[] = ["ANUAL", "SEMESTRAL", "TRIMESTRAL", "MENSUAL", "BIMESTRAL"];
-const TIPOS_PREDICCION: TipoPrediccion[] = ["PROM_MOVIL", "PROM_MOVIL_PONDERADO", "EXPONENCIAL"];
+export const TIPOS_PREDICCION: TipoPrediccion[] = ["PROM_MOVIL", "PROM_MOVIL_PONDERADO", "EXPONENCIAL"];
 
 export default function PaginaDemanda() {
   const [tipoPeriodoElegido, setTipoPeriodoElegido] = useState<TipoPeriodo>("MENSUAL");
@@ -77,7 +77,7 @@ export default function PaginaDemanda() {
           onClick={() => {
             setValue("articuloId", articulo.id);
             setArticuloElegido(articulo);
-            if (articulo.metodoPrediccion) setValue("tipoPrediccion", articulo.metodoPrediccion);
+            if (articulo.tipoPrediccion) setValue("tipoPrediccion", articulo.tipoPrediccion);
           }}
         >
           Seleccionar

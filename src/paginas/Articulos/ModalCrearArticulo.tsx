@@ -2,14 +2,8 @@ import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useCrearArticulo, useModelosInventario } from "@src/servicios/articulos";
-
-type DatosFormularioCrearArticulo = {
-  nombre: string;
-  stockActual: number;
-  modeloInventario: string;
-  estadoArticulo: "DISPONIBLE";
-  costoAlmacenamiento: number;
-};
+import { Articulo } from "@src/servicios/tiposEntidades";
+import { TIPOS_PREDICCION } from "../Demanda";
 
 export default function ModalCrearArticulo({ onClose }: { onClose: () => void }) {
   const {
@@ -17,7 +11,7 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<DatosFormularioCrearArticulo>({ defaultValues: { estadoArticulo: "DISPONIBLE" } });
+  } = useForm<Omit<Articulo, "id">>({ defaultValues: { estadoArticulo: "DISPONIBLE" } });
   const queryModelosInventario = useModelosInventario();
   const mtnCrearArticulo = useCrearArticulo();
 
@@ -27,7 +21,7 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
       <form
         className={styles["form"]}
         onSubmit={handleSubmit((dto) => {
-          mtnCrearArticulo.mutate(dto)
+          mtnCrearArticulo.mutate(dto);
           onClose();
         })}
       >
@@ -88,6 +82,28 @@ export default function ModalCrearArticulo({ onClose }: { onClose: () => void })
             )}
           />
         )}
+        <Controller
+          control={control}
+          name="tipoPrediccion"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <TextField
+                onChange={onChange}
+                label="Metodo prediccion predeterminado"
+                value={value}
+                select
+                error={!!errors.tipoPrediccion}
+              >
+                {/* no va a funcionar porque solo tengo el string y no el id. bah depende como lo manejan en el back */}
+                {TIPOS_PREDICCION.map((tipoPrediccion, index) => (
+                  <MenuItem key={index} value={tipoPrediccion}>
+                    {tipoPrediccion}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </>
+          )}
+        />
         <Button variant="contained" type="submit" color="success">
           Crear
         </Button>

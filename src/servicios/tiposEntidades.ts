@@ -9,7 +9,7 @@ export type Articulo = {
   estadoArticulo: string;
   modeloInventario: ModeloInventario;
   costoAlmacenamiento: number;
-  metodoPrediccion: TipoPrediccion;
+  tipoPrediccion: TipoPrediccion;
 };
 
 export type EstadoArticulo = "A_REPONER" | "DISPONIBLE" | "NO_DISPONIBLE";

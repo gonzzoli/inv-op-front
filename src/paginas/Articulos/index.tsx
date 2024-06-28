@@ -23,6 +23,10 @@ export default function PaginaArticulos() {
       elementoMostrado: (articulo) => articulo.nombre,
     },
     {
+      nombreMostrado: "Metodo de prediccion",
+      elementoMostrado: (articulo) => articulo.tipoPrediccion,
+    },
+    {
       nombreMostrado: "Stock",
       elementoMostrado: (articulo) => articulo.stockActual,
     },

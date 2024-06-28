@@ -4,6 +4,7 @@ import { Button, MenuItem, TextField } from "@mui/material";
 import { Articulo } from "@src/servicios/tiposEntidades";
 import { useEditarArticulo, useModelosInventario } from "@src/servicios/articulos";
 import toast from "react-hot-toast";
+import { TIPOS_PREDICCION } from "../Demanda";
 
 export default function ModalEditarArticulo({
   onClose,
@@ -94,6 +95,28 @@ export default function ModalEditarArticulo({
             )}
           />
         )}
+        <Controller
+          control={control}
+          name="tipoPrediccion"
+          render={({ field: { onChange, value } }) => (
+            <>
+              <TextField
+                onChange={onChange}
+                label="Metodo prediccion predeterminado"
+                value={value}
+                select
+                error={!!errors.tipoPrediccion}
+              >
+                {/* no va a funcionar porque solo tengo el string y no el id. bah depende como lo manejan en el back */}
+                {TIPOS_PREDICCION.map((tipoPrediccion, index) => (
+                  <MenuItem key={index} value={tipoPrediccion}>
+                    {tipoPrediccion}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </>
+          )}
+        />
         <Button variant="contained" type="submit" color="info">
           Editar
         </Button>
