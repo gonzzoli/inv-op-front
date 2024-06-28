@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import TablaDeDatos, { PropsTablaDeDatos } from "../../componentes/Tabla";
-import { useDemandaHistorica, usePrediccionDemanda } from "../../servicios/demanda";
+import {
+  useCalcularError,
+  useDemandaHistorica,
+  usePrediccionDemanda,
+} from "../../servicios/demanda";
 import { Articulo, DemandaHistorica, TipoPeriodo, Venta } from "../../servicios/tiposEntidades";
 import styles from "./styles.module.scss";
 import { Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
@@ -57,6 +61,7 @@ export default function PaginaDemanda() {
   );
 
   const queryPrediccion = usePrediccionDemanda(watch());
+  const queryCalculoError = useCalcularError(watch("articuloId"));
 
   const columnasTablaArticulos: PropsTablaDeDatos<Articulo>["columnas"] = [
     {
@@ -152,6 +157,24 @@ export default function PaginaDemanda() {
         <p>
           <strong>Tipo de periodo:</strong> {tipoPeriodoElegido}
         </p>
+        <div>
+          <strong>Calculos de error:</strong>
+          <ul style={{ paddingLeft: "2rem" }}>
+            {queryCalculoError.data &&
+              queryCalculoError.data.length > 1 &&
+              queryCalculoError.data.map((calculo) => (
+                <li style={{ display: "flex", gap: "1rem" }}>
+                  <p>
+                    <strong>Metodo: </strong> {calculo.tipoPrediccion}
+                  </p>
+                  <p>
+                    <strong>Error: </strong> {calculo.error}
+                  </p>
+                </li>
+              ))}
+          </ul>
+        </div>
+
         <div className={styles["inputs-prediccion"]}>
           <Controller
             name="tipoPrediccion"
@@ -266,7 +289,8 @@ export default function PaginaDemanda() {
                   label="Alpha de prediccion"
                   value={value}
                   onChange={(e) => {
-                    if (Number(e.currentTarget.value) < 0 || Number(e.currentTarget.value) > 1) return;
+                    if (Number(e.currentTarget.value) < 0 || Number(e.currentTarget.value) > 1)
+                      return;
                     onChange(Number(e.currentTarget.value));
                   }}
                   type="number"

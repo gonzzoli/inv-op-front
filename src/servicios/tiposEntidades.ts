@@ -1,3 +1,5 @@
+import { TipoPrediccion } from "./demanda/dto";
+
 export type ModeloInventario = "LOTE_FIJO" | "INTERVALO_FIJO";
 
 export type Articulo = {
@@ -7,6 +9,7 @@ export type Articulo = {
   estadoArticulo: string;
   modeloInventario: ModeloInventario;
   costoAlmacenamiento: number;
+  metodoPrediccion: TipoPrediccion;
 };
 
 export type EstadoArticulo = "A_REPONER" | "DISPONIBLE" | "NO_DISPONIBLE";

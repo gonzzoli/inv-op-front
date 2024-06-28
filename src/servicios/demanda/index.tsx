@@ -1,7 +1,7 @@
 import { DemandaHistorica, PrediccionDemanda, TipoPeriodo } from "../tiposEntidades";
 import axiosAPI from "../axiosAPI";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PrediccionDemandaDTO } from "./dto";
+import { PrediccionDemandaDTO, TipoPrediccion } from "./dto";
 
 export const useDemandaHistorica = (articuloId: number | null, tipoPeriodo: TipoPeriodo | null) => {
   return useQuery({
@@ -45,5 +45,26 @@ export const usePrediccionDemanda = (dto: PrediccionDemandaDTO) => {
         ? dto.ponderaciones?.length === dto.numeroPeriodos
         : true) &&
       (dto.tipoPrediccion === "EXPONENCIAL" ? !!dto.alpha : true),
+  });
+};
+
+export type CalculoError = {
+  error: number;
+  nombreArticulo: string;
+  fechaCalculoError: string;
+  tipoPrediccion: TipoPrediccion;
+};
+export const useCalcularError = (articuloId: number | null) => {
+  return useQuery({
+    queryKey: ["calculo-error", articuloId],
+    queryFn: () =>
+      (async () => {
+        const { data } = await axiosAPI.get<CalculoError[]>(
+          `/ventas/calcularError?idArticulo=${articuloId}`
+        );
+        console.log("PREDICCION", data);
+        return data;
+      })(),
+    enabled: !!articuloId,
   });
 };
